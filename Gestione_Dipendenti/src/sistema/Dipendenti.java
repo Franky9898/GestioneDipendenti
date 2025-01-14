@@ -100,7 +100,6 @@ public class Dipendenti
 			System.out.println("Inserisci stipendio dipendente: ");
 			String stipendio = scanner.nextLine();
 			double stipendioD = Double.parseDouble(stipendio);
-			System.out.println("Inserisci idTeam dipendente: ");
 
 			pstmt.setString(1, nome);
 			pstmt.setString(2, cognome);
@@ -120,6 +119,11 @@ public class Dipendenti
 		}
 	}
 
+	/*
+	 * Metodo per cancellare un dipendente con un determinato id
+	 * @param conn: connessione con il database
+	 * @scanner: scanner per prendere testo da console
+	 */
 	public static void cancellaDipendente(Connection conn, Scanner scanner)
 	{
 		String query = "DELETE FROM azienda.dipendenti WHERE idDipendente = ?; ";
@@ -142,21 +146,25 @@ public class Dipendenti
 		}
 	}
 
-	public static void selezioneDipendente(Connection conn, Scanner scanner)
+	/*
+	 * Metodo per selezionare gli impiegati con ruolo=DIPENDENTE
+	 * @param conn: connessione con il database
+	 */
+	public static void selezioneDipendente(Connection conn)
 	{
 		String query = "SELECT nome, cognome FROM azienda.dipendenti WHERE ruolo='DIPENDENTE'; ";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
 			try (ResultSet rs = pstmt.executeQuery())
 			{
+				if (!rs.next())
+					System.out.println("Nessun dipendente.");
 				while (rs.next())
 				{
 					String nome = rs.getString("nome");
 					String cognome = rs.getString("cognome");
 					System.out.printf("Nome: %s | Cognome: %s%n", nome, cognome);
 				}
-				if (!rs.next())
-					System.out.println("Nessun dipendente.");
 			}
 
 		} catch (SQLException e)
@@ -164,22 +172,25 @@ public class Dipendenti
 			e.printStackTrace();
 		}
 	}
-
-	public static void selezioneDipendenteTutti(Connection conn)
+	/*
+	 * Metodo per selezionare gli impiegati con ruolo=DIPENDENTE
+	 * @param conn: connessione con il database
+	 */
+	public static void selezioneImpiegati(Connection conn)
 	{
 		String query = "SELECT nome, cognome FROM azienda.dipendenti; ";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
 			try (ResultSet rs = pstmt.executeQuery())
 			{
+				if (!rs.next())
+					System.out.println("C'è il nulla.");
 				while (rs.next())
 				{
 					String nome = rs.getString("nome");
 					String cognome = rs.getString("cognome");
 					System.out.printf("Nome: %s | Cognome: %s%n", nome, cognome);
 				}
-				if (!rs.next())
-					System.out.println("C'è il nulla.");
 			}
 
 		} catch (SQLException e)
@@ -187,7 +198,12 @@ public class Dipendenti
 			e.printStackTrace();
 		}
 	}
-
+	
+	/*
+	 * Metodo per cambiare team a un dipendente con un determinato id
+	 * @param conn: connessione con il database
+	 * @scanner: scanner per prendere testo da console
+	 */
 	public static void cambioTeamDipendente(Connection conn, Scanner scanner)
 	{
 		String query = "UPDATE azienda.dipendenti SET idTeam = ? WHERE idDipendente = ?; ";
@@ -212,7 +228,11 @@ public class Dipendenti
 			e.printStackTrace();
 		}
 	}
-
+	/*
+	 * Metodo per cambiare stipendio a un dipendente con un determinato id
+	 * @param conn: connessione con il database
+	 * @scanner: scanner per prendere testo da console
+	 */
 	public static void cambioStipendio(Connection conn, Scanner scanner)
 	{
 		String query = "UPDATE azienda.dipendenti SET stipendio = ? WHERE idDipendente = ?; ";
@@ -238,10 +258,15 @@ public class Dipendenti
 		}
 	}
 
+	/*
+	 * Metodo per cambiare ruolo in MANAGER a un dipendente con un determinato id
+	 * @param conn: connessione con il database
+	 * @scanner: scanner per prendere testo da console
+	 */
 	public static void promozioneInManager(Connection conn, Scanner scanner)
 	{
-		String query = "UPDATE azienda.dipendenti SET roulo = 'MANAGER' WHERE idDipendente = ?;";
-		String query2 = "INSERT INTO azienda.manager (idDipendente, bonus, idTeamGestito) VALUES (?,?,?);";
+		String query = "UPDATE azienda.dipendenti SET ruolo = 'MANAGER' WHERE idDipendente = ?;";
+		String query2 = "INSERT INTO azienda.manager (idDipendente, bonus) VALUES (?,?, ?);";
 		try (PreparedStatement pstmt = conn.prepareStatement(query); PreparedStatement pstmt2 = conn.prepareStatement(query2))
 		{
 			System.out.println("Selezionare ID del fortunato: ");
@@ -263,7 +288,7 @@ public class Dipendenti
 			pstmt2.setInt(1, idI);
 			pstmt2.setDouble(2, bonusD);
 			pstmt2.setInt(3, idTeamI);
-			int righe2 = pstmt.executeUpdate();
+			int righe2 = pstmt2.executeUpdate();
 			if (righe2 == 0)
 			{
 				throw new SQLException("Something's wrong.");
