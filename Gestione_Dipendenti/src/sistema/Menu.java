@@ -13,7 +13,7 @@ public class Menu
 
         while (!uscita) {
             System.out.println("\nMenu:");
-            System.out.println("1. Opzione 1");
+            System.out.println("1. Gestione Dipendenti");
             System.out.println("2. Opzione 2");
             System.out.println("3. Opzione 3");
             System.out.println("4. Opzione 4");
