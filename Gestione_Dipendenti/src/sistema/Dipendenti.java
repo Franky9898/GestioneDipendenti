@@ -2,6 +2,7 @@ package sistema;
 
 import java.sql.*;
 import java.util.Scanner;
+import java.sql.ResultSet;
 
 public class Dipendenti
 {
