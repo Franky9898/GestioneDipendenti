@@ -23,7 +23,7 @@ public class Menu
 					+ "1. Menù gestione Dipendenti\n" 
 					+ "2. Menù gestione Manager\n" 
 					+ "3. Menù gestione Sviluppatore\n" 
-					+ "4. Menù gestione Linguaggi\n"
+					+ "7. Menù gestione Linguaggi\n"
 					+ "99. Esci\n" + "Inserisci comando:");
 			risposta = scanner.nextLine();
 			switch (risposta)
@@ -38,7 +38,7 @@ public class Menu
 			case "3":
 				// menuSviluppatore(conn,scanner);
 				break;
-			case "4":
+			case "7":
 				menuLinguaggi(conn, scanner);
 				uscita=true;
 				break;
