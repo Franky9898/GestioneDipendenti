@@ -7,7 +7,9 @@ public class Menu
 {
 	/*
 	 * Metodo che stampa in console un menù con diverse opzioni per gestire i vari sottomenù
+	 * 
 	 * @param conn: connessione con il database
+	 * 
 	 * @scanner: scanner per prendere testo da console
 	 */
 	public static void menuGenerale(Connection conn, Scanner scanner)
@@ -19,12 +21,11 @@ public class Menu
 
 		while (!uscita)
 		{
-			System.out.println("\nMenù: \n" 
-					+ "1. Menù gestione Dipendenti\n" 
-					+ "2. Menù gestione Manager\n" 
-					+ "3. Menù gestione Sviluppatore\n" 
-					+ "7. Menù gestione Linguaggi\n"
+
+			System.out.println("\nMenù: \n" + "1. Menù gestione Dipendenti\n" + "2. Menù gestione Manager\n" + "3. Menù gestione Sviluppatore\n" 
+					+ "4. Menù gestione Progetti\n" + "5. Menù gestione Team\n" + "7. Menù gestione Linguaggi\n"
 					+ "99. Esci\n" + "Inserisci comando:");
+
 			risposta = scanner.nextLine();
 			switch (risposta)
 			{
@@ -38,14 +39,20 @@ public class Menu
 			case "3":
 				// menuSviluppatore(conn,scanner);
 				break;
+			case "4":
+				menuProgetti(conn,scanner);
+				break;
+			case "5":
+				menuTeam(conn, scanner);
 			case "7":
 				menuLinguaggi(conn, scanner);
-				uscita=true;
-				break;
-			case "99": // caso exit
-				System.out.println("Arrivederci!");
 				uscita = true;
 				break;
+			case "99":
+				System.out.println("Arrivederci!");
+				uscita = true;
+				break; // caso exit
+
 			default:
 				System.out.println("Comando non valido. Riprova.");
 				break;
@@ -55,7 +62,9 @@ public class Menu
 
 	/*
 	 * Metodo che stampa in console un menù con diverse opzioni per gestire i dipendenti
+	 * 
 	 * @param conn: connessione con il database
+	 * 
 	 * @scanner: scanner per prendere testo da console
 	 */
 	public static void menuDipendente(Connection conn, Scanner scanner)
@@ -64,16 +73,9 @@ public class Menu
 		boolean uscita = false; // condizione di ripetizione del ciclo
 		while (!uscita)
 		{
-			System.out.println("\nMenu:\n"
-					+ "1. Inserisci dipendente.\n"
-					+ "2. Cancella dipendente.\n"
-					+ "3. Seleziona i dipendenti.\n"
-					+ "4. Seleziona tutti gli impiegati.\n"
-					+ "5. Cambiare team a un dipendente.\n"
-					+ "6. Cambiare stipendio a un dipendente.\n"
-					+ "7. Promuovere in manager un dipendente.\n"
-					+ "8. Torna al menù principale.\n"
-					+ "Inserisci comando: ");
+			System.out.println(
+					"\nMenu:\n" + "1. Inserisci dipendente.\n" + "2. Cancella dipendente.\n" + "3. Seleziona i dipendenti.\n" + "4. Seleziona tutti gli impiegati.\n" + "5. Cambiare team a un dipendente.\n"
+							+ "6. Cambiare stipendio a un dipendente.\n" + "7. Promuovere in manager un dipendente.\n" + "8. Torna al menù principale.\n" + "Inserisci comando: ");
 			risposta = scanner.nextLine();
 			switch (risposta)
 			{
@@ -108,10 +110,12 @@ public class Menu
 			}
 		}
 	}
-	
+
 	/*
 	 * Metodo che stampa in console un menù con diverse opzioni per gestire i vari progetti
+	 * 
 	 * @param conn: connessione con il database
+	 * 
 	 * @scanner: scanner per prendere testo da console
 	 */
 	public static void menuProgetti(Connection conn, Scanner scanner)
@@ -120,15 +124,8 @@ public class Menu
 		boolean uscita = false; // condizione di ripetizione del ciclo
 		while (!uscita)
 		{
-			System.out.println("\nMenu:\n"
-					+ "1. Inserisci progetto.\n"
-					+ "2. Cancella progetto.\n"
-					+ "3. Seleziona i progetti.\n"
-					+ "4. Cambia nome a un progetto.\n"
-					+ "5. Sostituisci team assegnato a un progetto.\n"
-					+ "6. Cambia project manager di un progetto\n"
-					+ "7. Torna al menù principale.\n"
-					+ "Inserisci comando: ");
+			System.out.println("\nMenu:\n" + "1. Inserisci progetto.\n" + "2. Cancella progetto.\n" + "3. Seleziona i progetti.\n" + "4. Cambia nome a un progetto.\n"
+					+ "5. Sostituisci team assegnato a un progetto.\n" + "6. Cambia project manager di un progetto\n" + "7. Torna al menù principale.\n" + "Inserisci comando: ");
 			risposta = scanner.nextLine();
 			switch (risposta)
 			{
@@ -160,10 +157,12 @@ public class Menu
 			}
 		}
 	}
-	
+
 	/*
 	 * Metodo che stampa in console un menù con diverse opzioni per gestire i vari linguaggi
+	 * 
 	 * @param conn: connessione con il database
+	 * 
 	 * @scanner: scanner per prendere testo da console
 	 */
 	public static void menuLinguaggi(Connection conn, Scanner scanner)
@@ -197,7 +196,46 @@ public class Menu
 			default:
 				System.out.println("Comando non valido. Riprova.");
 				break;
-			}
+			} 
+		} 
+	}
+
+
+	public static void menuTeam(Connection conn, Scanner scanner) {
+		String risposta;
+		boolean uscita = false; // condizione di ripetizione del ciclo
+		while (!uscita)
+		{
+		System.out.println("\nMenù: "
+				+"1. Inserisci Team\n"
+				+"2. Leggi tutti i team\n" 
+                +"3. Aggiorna Team\n" 
+                +"4. Elimina Team\n" 
+                +"5. Torna al menù principale\n" 
+               + "Inserisci comando: ");
+		 risposta = scanner.nextLine();
+	        switch (risposta)
+	        {
+	            case "1":
+	                Team.InserireTeam(conn, scanner);  // Chiama il metodo per inserire il team
+	                break;
+	            case "2":
+	                Team.readAllTeam(conn, scanner);  // Chiama il metodo per leggere tutti i team
+	                break;
+	            case "3":
+	                Team.upDateTeam(conn, scanner);  // Chiama il metodo per aggiornare il team
+	                break;
+	            case "4":
+	                Team.CancellazioneTeam(conn, scanner);  // Chiama il metodo per cancellare il team
+	                break;
+	            case "5":
+	                menuGenerale(conn, scanner);  // Torna al menù principale
+	                uscita = true;
+	                break;
+	            default:
+	                System.out.println("Comando non valido. Riprova.");
+	                break;
+	        }
 		}
 	}
 }
