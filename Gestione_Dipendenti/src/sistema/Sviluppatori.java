@@ -1,5 +1,5 @@
 package sistema;
-
+import java.sql.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -46,7 +46,7 @@ public class Sviluppatori extends Dipendenti {
 			pstmt.setDouble(4, stipendioD);
 			
 			int righe= pstmt.executeUpdate();
-			if (righe == 0)
+			if (righe == -1)
 			{
 				throw new SQLException("Creazione cliente fallita, nessuna riga aggiunta.");
 			}
@@ -63,7 +63,6 @@ public class Sviluppatori extends Dipendenti {
 					throw new SQLException ("Creazione cliente fallita, ID non recuperato.");
 				}
 			}
-			//id progetto assegnato foreign key(?)
 		}
 		catch(SQLException e)
 		{
@@ -71,10 +70,28 @@ public class Sviluppatori extends Dipendenti {
 		}
 		return -1; // In caso di errore
 	}
-	//sviluppatorilinguaggi
-	//i permettr di viualizzare nome cognome degli sviluppatori insieme ai linguaggi che conoscono
-	public static void sviluppatoriLinguaggi() {
-		
+	//ti permette di viualizzare nome, cognome degli sviluppatori insieme ai linguaggi che conoscono
+	public static void readSviluppatoriLinguaggi(Connection conn) {
+		String query = "SELECT dipendenti.idDipendente, dipendenti.nome, dipendenti.cognome, linguaggi.nomeLinguaggio"
+				+ "FROM (((azienda.dipendenti INNER JOIN azienda.sviluppatori ON sviluppatori.idDipendente=dipendenti.idDipendente) "
+				+ "INNER JOIN azienda.sviluppatori_linguaggi ON sviluppatori_linguaggi.idDipendente = sviluppatori.idDipendente)"
+				+ "INNER JOIN azienda.linguaggi ON sviluppatori_linguaggi.idLinguaggio=linguaggi.idLinguaggio )";
+		try(Statement stmt= conn.createStatement();
+			ResultSet rs = stmt.executeQuery(query)){
+			
+			System.out.println("Linguaggi conosciuti dagli sviluppatori: ");
+			while(rs.next()) {
+				int idDipendente= rs.getInt("idDipendente");
+				String nome= rs.getString("nome");
+				String cognome= rs.getString("cognome");
+				String nomeLinguaggio= rs.getString("nomeLinguaggio");
+				
+				System.out.printf("ID Dipendente: %d | Nome: %s | Cognome: %s | Linguaggio: %s",
+								idDipendente, nome, cognome, nomeLinguaggio);
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
 	}
 	
 
