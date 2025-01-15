@@ -1,6 +1,81 @@
 package sistema;
 
-public class Sviluppatori extends Dipendenti
-{
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.util.Scanner;
+
+import sistema.Dipendenti.Ruolo;
+
+public class Sviluppatori extends Dipendenti {
+	// sviluppatori
+	// inserimento sviluppatore
+	public static int inserimentoSviluppatore(Connection conn, Scanner scanner) {
+		String query= "INSERT INTO azienda.dipendenti " + "(nome, cognome, ruolo, stipendio)" + "VALUES (?,?,?,?)";
+		String query2= "INSERT INTO azienda.sviluppatori " + "(idDipendente, idProgettoAssegnato)" + "VALUES (?,?)";
+		//resultset id generato id=Statement.RETURN_GENERATED_KEYS
+		try(PreparedStatement pstmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);//ritorno della key idDipendente foreign key di svilupp.
+			PreparedStatement pstmt2 = conn.prepareStatement(query2))
+		{
+			
+			System.out.println("Inserisci nome dipendente: ");
+			String nome = scanner.nextLine();
+			System.out.println("Inserisci cognome dipendente: ");
+			String cognome = scanner.nextLine();
+			boolean continua = true;
+			String ruolo = "SVILUPPATORE";
+			
+			while (continua)
+			{	
+				System.out.println("Inserisci ruolo dipendente: ");
+				ruolo = scanner.nextLine().toUpperCase();
+				for (Ruolo r : Ruolo.values())
+				{
+					if (r.name().equals(ruolo))
+						continua = false;
+				}
+			}
+			System.out.println("Inserisci stipendio sviluppatore: ");
+			String stipendio= scanner.nextLine();
+			Double stipendioD=Double.parseDouble(stipendio);
+			
+			pstmt.setString(1, nome);
+			pstmt.setString(2, cognome);
+			pstmt.setString(3, ruolo);
+			pstmt.setDouble(4, stipendioD);
+			
+			int righe= pstmt.executeUpdate();
+			if (righe == 0)
+			{
+				throw new SQLException("Creazione cliente fallita, nessuna riga aggiunta.");
+			}
+			System.out.println("Dipendente aggiunto con successo");
+			
+			// Recupero la chiave generata (ID auto-increment)
+			try(ResultSet generatedKeys= pstmt.getGeneratedKeys())
+			{
+				if(generatedKeys.next()) 
+				{
+					return generatedKeys.getInt(1);
+				}else 
+				{
+					throw new SQLException ("Creazione cliente fallita, ID non recuperato.");
+				}
+			}
+			//id progetto assegnato foreign key(?)
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return -1; // In caso di errore
+	}
+	//sviluppatorilinguaggi
+	//i permettr di viualizzare nome cognome degli sviluppatori insieme ai linguaggi che conoscono
+	public static void sviluppatoriLinguaggi() {
+		
+	}
+	
 
 }
