@@ -165,7 +165,7 @@ public class Dipendenti
 		}
 	}
 
-	public static void selezioneDipendenteTutti(Connection conn)
+	public static void selezioneDipendenteTutti(Connection conn, Scanner scanner)
 	{
 		String query = "SELECT nome, cognome FROM azienda.dipendenti; ";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
