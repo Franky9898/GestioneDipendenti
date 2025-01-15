@@ -19,7 +19,12 @@ public class Menu
 
 		while (!uscita)
 		{
-			System.out.println("\nMenù: \n" + "1. Menù gestione Dipendenti\n" + "2. Menù gestione Manager\n" + "3. Menù gestione Sviluppatore\n" + "4. Esci\n" + "Inserisci comando:");
+			System.out.println("\nMenù: \n" 
+					+ "1. Menù gestione Dipendenti\n" 
+					+ "2. Menù gestione Manager\n" 
+					+ "3. Menù gestione Sviluppatore\n" 
+					+ "4. Menù gestione Linguaggi\n"
+					+ "99. Esci\n" + "Inserisci comando:");
 			risposta = scanner.nextLine();
 			switch (risposta)
 			{
@@ -33,7 +38,11 @@ public class Menu
 			case "3":
 				// menuSviluppatore(conn,scanner);
 				break;
-			case "4": // caso exit
+			case "4":
+				menuLinguaggi(conn, scanner);
+				uscita=true;
+				break;
+			case "99": // caso exit
 				System.out.println("Arrivederci!");
 				uscita = true;
 				break;
@@ -100,6 +109,11 @@ public class Menu
 		}
 	}
 	
+	/*
+	 * Metodo che stampa in console un menù con diverse opzioni per gestire i vari progetti
+	 * @param conn: connessione con il database
+	 * @scanner: scanner per prendere testo da console
+	 */
 	public static void menuProgetti(Connection conn, Scanner scanner)
 	{
 		String risposta;
@@ -137,6 +151,46 @@ public class Menu
 				Progetti.cambioProjectManager(conn, scanner);
 				break;
 			case "7":
+				menuGenerale(conn, scanner);
+				uscita = true;
+				break;
+			default:
+				System.out.println("Comando non valido. Riprova.");
+				break;
+			}
+		}
+	}
+	
+	/*
+	 * Metodo che stampa in console un menù con diverse opzioni per gestire i vari linguaggi
+	 * @param conn: connessione con il database
+	 * @scanner: scanner per prendere testo da console
+	 */
+	public static void menuLinguaggi(Connection conn, Scanner scanner)
+	{
+		String risposta;
+		boolean uscita = false; // condizione di ripetizione del ciclo
+		while (!uscita)
+		{
+			System.out.println("\nMenu:\n"
+					+ "1. Inserisci progetto.\n"
+					+ "2. Cancella progetto.\n"
+					+ "3. Seleziona i progetti.\n"
+					+ "4. Torna al menù principale.\n"
+					+ "Inserisci comando: ");
+			risposta = scanner.nextLine();
+			switch (risposta)
+			{
+			case "1":
+				Linguaggi.inserisciLinguaggio(conn, scanner);
+				break;
+			case "2":
+				Linguaggi.cancellaLinguaggio(conn, scanner);
+				break;
+			case "3":
+				Linguaggi.selezioneLinguaggio(conn);
+				break;
+			case "4":
 				menuGenerale(conn, scanner);
 				uscita = true;
 				break;
