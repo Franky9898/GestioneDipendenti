@@ -13,7 +13,7 @@ public class Sviluppatori extends Dipendenti {
 	// inserimento sviluppatore
 	public static int inserimentoSviluppatore(Connection conn, Scanner scanner) {
 		String query= "INSERT INTO azienda.dipendenti " + "(nome, cognome, ruolo, stipendio)" + "VALUES (?,?,?,?)";
-		String query2= "INSERT INTO azienda.sviluppatori " + "(idDipendente, idProgettoAssegnato)" + "VALUES (?,?)";
+		String query2= "INSERT INTO azienda.sviluppatori " + "(idDipendente)" + "VALUES (?)";
 		//resultset id generato id=Statement.RETURN_GENERATED_KEYS
 		try(PreparedStatement pstmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);//ritorno della key idDipendente foreign key di svilupp.
 			PreparedStatement pstmt2 = conn.prepareStatement(query2))
@@ -36,21 +36,19 @@ public class Sviluppatori extends Dipendenti {
 						continua = false;
 				}
 			}
-			System.out.println("Inserisci stipendio sviluppatore: ");
-			String stipendio= scanner.nextLine();
-			Double stipendioD=Double.parseDouble(stipendio);
+			double stipendio = FunzUtili.getDouble(scanner, "Inserire stipendio: ");
 			
 			pstmt.setString(1, nome);
 			pstmt.setString(2, cognome);
 			pstmt.setString(3, ruolo);
-			pstmt.setDouble(4, stipendioD);
+			pstmt.setDouble(4, stipendio);
 			
 			int righe= pstmt.executeUpdate();
 			if (righe == -1)
 			{
-				throw new SQLException("Creazione cliente fallita, nessuna riga aggiunta.");
+				throw new SQLException("Aggiunta sviluppatore fallita, nessuna riga aggiunta.");
 			}
-			System.out.println("Dipendente aggiunto con successo");
+			System.out.println("Sviluppatore aggiunto con successo");
 			
 			// Recupero la chiave generata (ID auto-increment)
 			try(ResultSet generatedKeys= pstmt.getGeneratedKeys())
@@ -60,7 +58,7 @@ public class Sviluppatori extends Dipendenti {
 					return generatedKeys.getInt(1);
 				}else 
 				{
-					throw new SQLException ("Creazione cliente fallita, ID non recuperato.");
+					throw new SQLException ("Aggiunta sviluppatore fallita, ID non recuperato.");
 				}
 			}
 		}
