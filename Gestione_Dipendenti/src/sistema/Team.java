@@ -23,21 +23,8 @@ public class Team
     		System.out.println("Inserisci nome del Team");
     		String nomeTeam = scanner.nextLine();
     		
-    		int teamLeader=-1;
-    		boolean validNumber=false;
-    		while(!validNumber)
-    		{
-    			System.out.println("Inserisci l'ID del Teamleader");
-        		String inserito = scanner.nextLine();
-        		try
-        		{
-        		 teamLeader=Integer.parseInt(inserito);
-        		 validNumber=true;
-        		}catch(NumberFormatException e) 
-        		{
-        			System.out.println("ID non valido! PER FAVORE PER FAVORE ISCIERCI UN NUMERO INTERO " );
-        		}
-    		}
+    		int teamLeader=FunzUtili.getInt(scanner, "Inserisci l'ID del TeamLeader");
+    	
     		pstmt.setString(1,nomeTeam);
     		pstmt.setInt(2, teamLeader);
     		
@@ -80,8 +67,8 @@ public class Team
     	String query = "UPDATE azienda.team SET nomeTeam=? , teamLeader = ? WHERE idTeam=?";
     	try(PreparedStatement pstmt=conn.prepareStatement(query))
     	{
-    		System.out.println("Inserisci ID del team aggiornato");
-    		int idTeam = Integer.parseInt(scanner.nextLine());
+    	
+    		int idTeam =FunzUtili.getInt(scanner,"Inserisci ID del team aggiornato");
     		
     		System.out.println("Inserisci il nuovo team");
     		String nuovoNome=scanner.nextLine();
@@ -114,8 +101,8 @@ public class Team
     String query = "DELETE FROM azienda.team WHERE idTeam= ?";
     try(PreparedStatement pstmt = conn.prepareStatement(query))
     {
-    	System.out.println("Inserisci l'ID del team da eliminare ");
-    	int idTeam=Integer.parseInt(scanner.nextLine());
+  	
+    	int idTeam=FunzUtili.getInt(scanner,"Inserisci l'ID del team da eliminare ");
     	pstmt.setInt(1, idTeam);
     	int righe=pstmt.executeUpdate();
     	if(righe < 1 ) 
