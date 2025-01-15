@@ -1,6 +1,9 @@
 package sistema;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Manager extends Dipendenti {
@@ -34,14 +37,68 @@ public class Manager extends Dipendenti {
 		this.idTeamGestito = idTeamGestito;
 	}
 	
+	public static int aggiungiManager(Connection conn, Scanner scanner) {
+		String query = "INSERT INTO azienda.dipendenti " + "(nome, cognome, ruolo, stipendio, idDipendente)" + "VALUES (?,?,?,?)";
+		String query1 = "INSERT INTO azienda.manager;";//continua 
+		try (PreparedStatement pstmt = conn.prepareStatement(query))
+		{
+			System.out.println("Inserisci nome dipendente: ");
+			String nome = scanner.nextLine();
+			System.out.println("Inserisci cognome dipendente: ");
+			String cognome = scanner.nextLine();
+			String ruolo = "MANAGER";
+			double stipendio = FunzUtili.getDouble(scanner, "Inserisci stipendio dipendente: ");
+			pstmt.setString(1, nome);
+			pstmt.setString(2, cognome);
+			pstmt.setString(3, ruolo);
+			pstmt.setDouble(4, stipendio);
+			int righe = pstmt.executeUpdate();
+			if (righe < 1)
+			{
+				throw new SQLException("Creazione dipendente fallita, nessuna riga aggiunta.");
+			}
+			System.out.println("Dipendente aggiunto con successo");
+			try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1);
+                } else {
+                    throw new SQLException("Creazione cliente fallita, ID non recuperato.");
+                }
+			}
+
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
 	public static void visualizzaManager(Connection conn, Scanner scanner) {
 		
-		String query ="SELECT nome, cognome, manager.idTeamGestito AS team\n"
+		String query = "SELECT nome, cognome, manager.id, manager.idTeamGestito AS team\n"
 				+ "FROM azienda.dipendenti\n"
-				+ "INNER JOIN azienda.manager\n"
+				+ "LEFT JOIN azienda.manager\n"
 				+ "ON  dipendenti.idDipendente = manager.idDipendente\n"
 				+ "WHERE dipendenti.ruolo ='manager';"; 
 		
-		
+		try (PreparedStatement pstmt = conn.prepareStatement(query))
+		{
+			try (ResultSet rs = pstmt.executeQuery())
+			{
+				if (!rs.next())
+					System.out.println("Non ci sono manager.");
+				while (rs.next())
+				{
+					String nome = rs.getString("nome");
+					String cognome = rs.getString("cognome");
+					int id = rs.getInt("id");
+					int idTeamGestito = rs.getInt("idTeamGestito");
+					System.out.printf("nome: %s | cognome: %s | id: %d%n | id team gestito: %d%n", nome, cognome, id, idTeamGestito);
+				}
+			}
+
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
+	
 }
