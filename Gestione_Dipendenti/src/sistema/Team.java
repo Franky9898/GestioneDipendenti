@@ -73,8 +73,7 @@ public class Team
     		System.out.println("Inserisci il nuovo team");
     		String nuovoNome=scanner.nextLine();
     		
-    		System.out.println("Inserisci l'ID nuovodel team Leader ");
-    		int nuovoTeamLeader=scanner.nextInt();
+    		int nuovoTeamLeader=FunzUtili.getInt(scanner,"Inserisci l'ID nuovodel team Leader ");
     		
     		pstmt.setString(1,nuovoNome);
     		pstmt.setInt(2, nuovoTeamLeader);
