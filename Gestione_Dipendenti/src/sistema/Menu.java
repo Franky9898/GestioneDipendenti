@@ -19,7 +19,7 @@ public class Menu
 
 		while (!uscita)
 		{
-			System.out.println("\nMenù: \n" + "1. Menù gestione Dipendenti\n" + "2. Menù gestione Manager\n" + "3. Menù gestione Sviluppatore\n" + "4. Esci\n" + "Inserisci comando:");
+			System.out.println("\nMenù: \n" + "1. Menù gestione Dipendenti\n" + "2. Menù gestione Manager\n" + "3. Menù gestione Sviluppatore\n" +"5. Menù gestione Team\n" + "6. Esci\n" + "Inserisci comando:");
 			risposta = scanner.nextLine();
 			switch (risposta)
 			{
@@ -33,7 +33,10 @@ public class Menu
 			case "3":
 				// menuSviluppatore(conn,scanner);
 				break;
-			case "4": // caso exit
+			case "4":
+               // menuTeam(conn, scanner); 
+                break;
+			case "5": // caso exit
 				System.out.println("Arrivederci!");
 				uscita = true;
 				break;
@@ -144,6 +147,43 @@ public class Menu
 				System.out.println("Comando non valido. Riprova.");
 				break;
 			}
+		}
+	}
+	public static void menuTeam(Connection conn, Scanner scanner) {
+		String risposta;
+		boolean uscita = false; // condizione di ripetizione del ciclo
+		while (!uscita)
+		{
+		System.out.println("\nMenù: "
+				+"1. Inserisci Team\n"
+				+"2. Leggi tutti i team\n" 
+                +"3. Aggiorna Team\n" 
+                +"4. Elimina Team\n" 
+                +"5. Torna al menù principale\n" 
+               + "Inserisci comando: ");
+		 risposta = scanner.nextLine();
+	        switch (risposta)
+	        {
+	            case "1":
+	                Team.InserireTeam(conn, scanner);  // Chiama il metodo per inserire il team
+	                break;
+	            case "2":
+	                Team.readAllTeam(conn, scanner);  // Chiama il metodo per leggere tutti i team
+	                break;
+	            case "3":
+	                Team.upDateTeam(conn, scanner);  // Chiama il metodo per aggiornare il team
+	                break;
+	            case "4":
+	                Team.CancellazioneTeam(conn, scanner);  // Chiama il metodo per cancellare il team
+	                break;
+	            case "5":
+	                menuGenerale(conn, scanner);  // Torna al menù principale
+	                uscita = true;
+	                break;
+	            default:
+	                System.out.println("Comando non valido. Riprova.");
+	                break;
+	        }
 		}
 	}
 }
