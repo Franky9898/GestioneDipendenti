@@ -15,62 +15,7 @@ public class Dipendenti
 	}
 
 	/*
-	 * Metodo per inserire un dipendente quando si è consapevoli del team di cui farà parte
-	 * 
-	 * @param conn: connessione con il database
-	 * 
-	 * @param scanner: scanner per prendere input utente
-	 */
-
-	public static void inserimentoDipendenteConTeam(Connection conn, Scanner scanner)
-	{
-		String query = "INSERT INTO azienda.dipendenti " + "(nome, cognome, ruolo, stipendio, idTeam)" + "VALUES (?,?,?,?,?)";
-		try (PreparedStatement pstmt = conn.prepareStatement(query))
-		{
-			System.out.println("Inserisci nome dipendente: ");
-			String nome = scanner.nextLine();
-			System.out.println("Inserisci cognome dipendente: ");
-			String cognome = scanner.nextLine();
-			boolean continua = true;
-			String ruolo = "DIPENDENTE";
-			while (continua) // Converte la stringa passata in console in enum Ruolo. Diventerà un metodo
-			{
-				System.out.println("Inserisci ruolo dipendente: ");
-				ruolo = scanner.nextLine().toUpperCase();
-				for (Ruolo r : Ruolo.values())
-				{
-					if (r.name().equals(ruolo))
-						continua = false;
-				}
-			}
-			System.out.println("Inserisci stipendio dipendente: ");
-			String stipendio = scanner.nextLine();
-			double stipendioD = Double.parseDouble(stipendio);
-			System.out.println("Inserisci idTeam dipendente: ");
-			String idTeam = scanner.nextLine();
-			int idTeamI = Integer.parseInt(idTeam);
-
-			pstmt.setString(1, nome);
-			pstmt.setString(2, cognome);
-			pstmt.setString(3, ruolo);
-			pstmt.setDouble(4, stipendioD);
-			pstmt.setInt(5, idTeamI);
-
-			int righe = pstmt.executeUpdate();
-			if (righe == 0)
-			{
-				throw new SQLException("Creazione cliente fallita, nessuna riga aggiunta.");
-			}
-			System.out.println("Dipendente aggiunto con successo");
-
-		} catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	/*
-	 * Metodo per inserire un dipendente quando NON si è consapevoli del team di cui farà parte
+	 * Metodo per inserire un dipendente
 	 * 
 	 * @param conn: connessione con il database
 	 * 
@@ -86,27 +31,12 @@ public class Dipendenti
 			String nome = scanner.nextLine();
 			System.out.println("Inserisci cognome dipendente: ");
 			String cognome = scanner.nextLine();
-			boolean continua = true;
 			String ruolo = "DIPENDENTE";
-			while (continua) // Converte la stringa passata in console in enum Ruolo. Diventerà un metodo
-			{
-				System.out.println("Inserisci ruolo dipendente: ");
-				ruolo = scanner.nextLine().toUpperCase();
-				for (Ruolo r : Ruolo.values())
-				{
-					if (r.name().equals(ruolo))
-						continua = false;
-				}
-			}
-			System.out.println("Inserisci stipendio dipendente: ");
-			String stipendio = scanner.nextLine();
-			double stipendioD = Double.parseDouble(stipendio);
-
+			double stipendio = FunzUtili.getDouble(scanner, "Inserisci stipendio dipendente: ");
 			pstmt.setString(1, nome);
 			pstmt.setString(2, cognome);
 			pstmt.setString(3, ruolo);
-			pstmt.setDouble(4, stipendioD);
-
+			pstmt.setDouble(4, stipendio);
 			int righe = pstmt.executeUpdate();
 			if (righe == 0)
 			{
@@ -130,10 +60,8 @@ public class Dipendenti
 		String query = "DELETE FROM azienda.dipendenti WHERE idDipendente = ?; ";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
-			System.out.println("Selezionare ID dipendente da cancellare: ");
-			String id = scanner.nextLine();
-			int idI = Integer.parseInt(id);
-			pstmt.setInt(1, idI);
+			int id = FunzUtili.getInt(scanner,"Selezionare ID dipendente da cancellare: " );
+			pstmt.setInt(1, id);
 			int righe = pstmt.executeUpdate();
 			if (righe == 0)
 			{
@@ -153,7 +81,9 @@ public class Dipendenti
 	 */
 	public static void selezioneDipendente(Connection conn)
 	{
-		String query = "SELECT nome, cognome FROM azienda.dipendenti WHERE ruolo='DIPENDENTE'; ";
+		String query = "SELECT nome, cognome, idTeam FROM azienda.dipendenti"
+				+ "INNER JOIN azienda.team_dipendentiassegnati ON dipendenti.idDipendente=team_dipendentiassegnati.idDipendente "
+				+ "WHERE ruolo='DIPENDENTE';";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
 			try (ResultSet rs = pstmt.executeQuery())
@@ -164,7 +94,8 @@ public class Dipendenti
 				{
 					String nome = rs.getString("nome");
 					String cognome = rs.getString("cognome");
-					System.out.printf("Nome: %s | Cognome: %s%n", nome, cognome);
+					int idTeam = rs.getInt("idTeam");
+					System.out.printf("Nome: %s | Cognome: %s | idTeam: %d%n", nome, cognome, idTeam);
 				}
 			}
 
@@ -179,7 +110,8 @@ public class Dipendenti
 	 */
 	public static void selezioneImpiegati(Connection conn)
 	{
-		String query = "SELECT nome, cognome FROM azienda.dipendenti; ";
+		String query = "SELECT nome, cognome, idTeam FROM azienda.dipendenti"
+				+ "INNER JOIN azienda.team_dipendentiassegnati ON dipendenti.idDipendente=team_dipendentiassegnati.idDipendente;";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
 			try (ResultSet rs = pstmt.executeQuery())
@@ -190,7 +122,8 @@ public class Dipendenti
 				{
 					String nome = rs.getString("nome");
 					String cognome = rs.getString("cognome");
-					System.out.printf("Nome: %s | Cognome: %s%n", nome, cognome);
+					int idTeam = rs.getInt("idTeam");
+					System.out.printf("Nome: %s | Cognome: %s | idTeam: %d%n", nome, cognome, idTeam);
 				}
 			}
 
@@ -210,14 +143,11 @@ public class Dipendenti
 		String query = "UPDATE azienda.dipendenti SET idTeam = ? WHERE idDipendente = ?; ";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
-			System.out.println("Selezionare ID dipendente da aggiungere al team: ");
-			String id = scanner.nextLine();
-			int idI = Integer.parseInt(id);
-			System.out.println("Inserire ID del team: ");
-			String idTeam = scanner.nextLine();
-			int idTeamI = Integer.parseInt(idTeam);
-			pstmt.setInt(1, idTeamI);
-			pstmt.setInt(2, idI);
+			int id = FunzUtili.getInt(scanner, "Selezionare ID dipendente da aggiungere al team: ");
+			System.out.println();
+			int idTeam = FunzUtili.getInt(scanner, "Inserire ID del team: ");
+			pstmt.setInt(1, idTeam);
+			pstmt.setInt(2, id);
 			int righe = pstmt.executeUpdate();
 			if (righe == 0)
 			{
@@ -239,14 +169,10 @@ public class Dipendenti
 		String query = "UPDATE azienda.dipendenti SET stipendio = ? WHERE idDipendente = ?; ";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
-			System.out.println("Selezionare ID dipendente a cui si vuole cambiare lo stipendio: ");
-			String id = scanner.nextLine();
-			int idI = Integer.parseInt(id);
-			System.out.println("Inserire nuovo stipendio: ");
-			String stipendio = scanner.nextLine();
-			double stipendioD = Double.parseDouble(stipendio);
-			pstmt.setDouble(1, stipendioD);
-			pstmt.setInt(2, idI);
+			int id = FunzUtili.getInt(scanner, "Selezionare ID dipendente a cui si vuole cambiare lo stipendio: " );
+			double stipendio = FunzUtili.getDouble(scanner, "Inserire nuovo stipendio: ");
+			pstmt.setDouble(1, stipendio);
+			pstmt.setInt(2, id);
 			int righe = pstmt.executeUpdate();
 			if (righe == 0)
 			{
@@ -270,24 +196,20 @@ public class Dipendenti
 		String query2 = "INSERT INTO azienda.manager (idDipendente, bonus) VALUES (?,?, ?);";
 		try (PreparedStatement pstmt = conn.prepareStatement(query); PreparedStatement pstmt2 = conn.prepareStatement(query2))
 		{
-			System.out.println("Selezionare ID del fortunato: ");
-			String id = scanner.nextLine();
-			int idI = Integer.parseInt(id);
-			pstmt.setInt(1, idI);
+			int id = FunzUtili.getInt(scanner, "Selezionare ID del fortunato: ");
+			pstmt.setInt(1, id);
 			int righe = pstmt.executeUpdate();
 			if (righe == 0)
 			{
 				throw new SQLException("Il destino ha deciso che il dipendente rimarrà tale.");
 			}
 			System.out.println("Ruolo aggiornato con successo");
-			System.out.println("Inserire bonus: ");
-			String bonus = scanner.nextLine();
-			double bonusD = Double.parseDouble(bonus);
+			double bonus = FunzUtili.getDouble(scanner, "Inserire bonus: ");
 			System.out.println("Inserire idTeamGestito: ");
 			String idTeam = scanner.nextLine();
 			int idTeamI = Integer.parseInt(idTeam);
-			pstmt2.setInt(1, idI);
-			pstmt2.setDouble(2, bonusD);
+			pstmt2.setInt(1, id);
+			pstmt2.setDouble(2, bonus);
 			pstmt2.setInt(3, idTeamI);
 			int righe2 = pstmt2.executeUpdate();
 			if (righe2 == 0)
