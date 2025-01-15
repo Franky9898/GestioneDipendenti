@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Scanner;
 
 public class Manager extends Dipendenti {
@@ -37,10 +38,12 @@ public class Manager extends Dipendenti {
 		this.idTeamGestito = idTeamGestito;
 	}
 	
-	public static int aggiungiManager(Connection conn, Scanner scanner) {
-		String query = "INSERT INTO azienda.dipendenti " + "(nome, cognome, ruolo, stipendio, idDipendente)" + "VALUES (?,?,?,?)";
-		String query1 = "INSERT INTO azienda.manager;";//continua 
-		try (PreparedStatement pstmt = conn.prepareStatement(query))
+	public static void aggiungiManager(Connection conn, Scanner scanner) {
+		int idDipendente;
+		int idManager;
+		String query = "INSERT INTO azienda.dipendenti " + "(nome, cognome, ruolo, stipendio)" + "VALUES (?,?,?,?)";
+		String query1 = "INSERT INTO azienda.team(idDipendente, bonus)"+ "VALUES (?,?)";
+		try (PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS))
 		{
 			System.out.println("Inserisci nome dipendente: ");
 			String nome = scanner.nextLine();
@@ -60,9 +63,37 @@ public class Manager extends Dipendenti {
 			System.out.println("Dipendente aggiunto con successo");
 			try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    return generatedKeys.getInt(1);
+                    idDipendente = generatedKeys.getInt(1);
                 } else {
                     throw new SQLException("Creazione cliente fallita, ID non recuperato.");
+                }
+			}
+
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		
+		try (PreparedStatement pstmt = conn.prepareStatement(query1, Statement.RETURN_GENERATED_KEYS))
+		{
+			System.out.println("Inserisci id dipendente: ");
+			int idDip = scanner.nextInt();
+			System.out.println("Inserisci bonus: ");
+			double bonus = scanner.nextDouble();
+			pstmt.setInt(1, idDip);
+			pstmt.setDouble(2, bonus);
+			
+			int righe = pstmt.executeUpdate();
+			if (righe < 1)
+			{
+				throw new SQLException("Creazione manager fallita, nessuna riga aggiunta.");
+			}
+			System.out.println("Manager aggiunto con successo");
+			try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    idDipendente = generatedKeys.getInt(1);
+                } else {
+                    throw new SQLException("Creazione manager fallita, ID non recuperato.");
                 }
 			}
 
