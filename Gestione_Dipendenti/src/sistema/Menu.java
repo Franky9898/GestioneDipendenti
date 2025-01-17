@@ -34,7 +34,7 @@ public class Menu
 				uscita = true;
 				break;
 			case "2":
-				// menuManager(conn,scanner);
+				menuManager(conn,scanner);
 				break;
 			case "3":
 				// menuSviluppatore(conn,scanner);
@@ -118,6 +118,10 @@ public class Menu
 	 * 
 	 * @scanner: scanner per prendere testo da console
 	 */
+
+	
+	
+
 	public static void menuProgetti(Connection conn, Scanner scanner)
 	{
 		String risposta;
@@ -155,6 +159,7 @@ public class Menu
 				System.out.println("Comando non valido. Riprova.");
 				break;
 			}
+			
 		}
 	}
 
@@ -198,6 +203,34 @@ public class Menu
 				break;
 			} 
 		} 
+	}
+	
+	public static void menuManager(Connection conn, Scanner scanner) {
+		String risposta;
+		boolean uscita = false;
+		while(!uscita) {
+			System.out.println("\nMenu:\n"
+					+ "1. Inserisci manager.\n"
+					+ "2. Cancella manager.\n"
+					+ "3. Visualizza manager.\n"
+					+ "4. Cerca manager con id.");
+			risposta = scanner.nextLine();
+			switch (risposta)
+			{
+			case "1":
+				Manager.inserisciManager(conn, scanner);
+				break;
+			case "2":
+				Manager.cancellaManager(conn, scanner);
+				break;
+			case "3":
+				Manager.visualizzaManager(conn, scanner);
+				break;
+			case "4":
+				Manager.visualizzaManagerConID(conn, scanner);
+				break;
+			}
+		}
 	}
 
 

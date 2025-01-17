@@ -9,57 +9,12 @@ import java.util.Scanner;
 
 public class Manager extends Dipendenti
 {
-	private int id;
-	private int idDipendente;
-	private double bonus;
-	private int idTeamGestito;
 
-	public int getId()
+	public static void inserisciManager(Connection conn, Scanner scanner)
 	{
-		return id;
-	}
-
-	public void setId(int id)
-	{
-		this.id = id;
-	}
-
-	public int getIdDipendente()
-	{
-		return idDipendente;
-	}
-
-	public void setIdDipendente(int idDipendente)
-	{
-		this.idDipendente = idDipendente;
-	}
-
-	public double getBonus()
-	{
-		return bonus;
-	}
-
-	public void setBonus(double bonus)
-	{
-		this.bonus = bonus;
-	}
-
-	public int getIdTeamGestito()
-	{
-		return idTeamGestito;
-	}
-
-	public void setIdTeamGestito(int idTeamGestito)
-	{
-		this.idTeamGestito = idTeamGestito;
-	}
-
-	public static void aggiungiManager(Connection conn, Scanner scanner)
-	{
-		int idDipendente;
-		int idManager;
+		int idDipendente=-1;
 		String query = "INSERT INTO azienda.dipendenti " + "(nome, cognome, ruolo, stipendio)" + "VALUES (?,?,?,?)";
-		String query1 = "INSERT INTO azienda.team(idDipendente, bonus)" + "VALUES (?,?)";
+		String query1 = "INSERT INTO azienda.manager" + "(idDipendente, bonus)" + "VALUES (?,?)";
 		try (PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS))
 		{
 			System.out.println("Inserisci nome dipendente: ");
@@ -96,11 +51,9 @@ public class Manager extends Dipendenti
 
 		try (PreparedStatement pstmt = conn.prepareStatement(query1, Statement.RETURN_GENERATED_KEYS))
 		{
-			System.out.println("Inserisci id dipendente: ");
-			int idDip = scanner.nextInt();
-			System.out.println("Inserisci bonus: ");
-			double bonus = scanner.nextDouble();
-			pstmt.setInt(1, idDip);
+
+			double bonus = FunzUtili.getDouble(scanner, "Inserisci bonus: ");
+			pstmt.setInt(1, idDipendente);// il problema è qui!
 			pstmt.setDouble(2, bonus);
 
 			int righe = pstmt.executeUpdate();
@@ -111,10 +64,7 @@ public class Manager extends Dipendenti
 			System.out.println("Manager aggiunto con successo");
 			try (ResultSet generatedKeys = pstmt.getGeneratedKeys())
 			{
-				if (generatedKeys.next())
-				{
-					idDipendente = generatedKeys.getInt(1);
-				} else
+				if (!generatedKeys.next())
 				{
 					throw new SQLException("Creazione manager fallita, ID non recuperato.");
 				}
@@ -126,11 +76,33 @@ public class Manager extends Dipendenti
 		}
 	}
 
+	public static void cancellaManager(Connection conn, Scanner scanner)
+	{
+		String query = "DELETE FROM azienda.dipendenti WHERE idDipendente = ? ; ";
+		try (PreparedStatement pstmt = conn.prepareStatement(query))
+		{
+			int idDipendente = FunzUtili.getInt(scanner, "Inserire ID dipendente del manager da cancellare: ");
+			pstmt.setInt(1, idDipendente);
+			int righe = pstmt.executeUpdate();
+			if (righe == 0)
+			{
+				throw new SQLException("Cancellazione manager fallita, nessuna riga rimossa.");
+			}
+			System.out.println("Manager cancellato con successo");
+
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
 	public static void visualizzaManager(Connection conn, Scanner scanner)
 	{
 
-		String query = "SELECT nome, cognome, manager.id, manager.idTeamGestito AS team\n" + "FROM azienda.dipendenti\n" + "LEFT JOIN azienda.manager\n"
-				+ "ON  dipendenti.idDipendente = manager.idDipendente\n" + "WHERE dipendenti.ruolo ='manager';";
+		String query = "SELECT idDipendente, nome, cognome" 
+		+ "FROM azienda.dipendenti" 
+		+ "INNER JOIN azienda.manager" 
+		+ "ON  dipendenti.idDipendente = manager.idDipendente;";
 
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
@@ -140,11 +112,42 @@ public class Manager extends Dipendenti
 					System.out.println("Non ci sono manager.");
 				while (rs.next())
 				{
+					int idDipendente = rs.getInt("idDipendente");
 					String nome = rs.getString("nome");
 					String cognome = rs.getString("cognome");
-					int id = rs.getInt("id");
-					int idTeamGestito = rs.getInt("idTeamGestito");
-					System.out.printf("nome: %s | cognome: %s | id: %d%n | id team gestito: %d%n", nome, cognome, id, idTeamGestito);
+					System.out.printf("idDipendente: %d | nome: %s | cognome: %s%n ", idDipendente, nome, cognome);
+				}
+			}
+
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public static void visualizzaManagerConID(Connection conn, Scanner scanner)
+	{
+
+		String query = "SELECT nome, cognome, manager.idDipendente" 
+				+ "FROM azienda.dipendenti" 
+				+ "INNER JOIN azienda.manager" 
+				+ "ON  dipendenti.idDipendente = manager.idDipendente"
+				+ "WHERE idDipendente = ?;";
+
+		try (PreparedStatement pstmt = conn.prepareStatement(query))
+		{
+			int id = FunzUtili.getInt(scanner, "Inserire id manager da cercare: ");
+			pstmt.setInt(1, id);
+			try (ResultSet rs = pstmt.executeQuery())
+			{
+				if (!rs.next())
+					System.out.println("Non ci sono manager con questo id.");
+				while (rs.next())
+				{
+					String nome = rs.getString("nome");
+					String cognome = rs.getString("cognome");
+					id = rs.getInt("idDipendente");
+					System.out.printf("nome: %s | cognome: %s | id: %d%n", nome, cognome, id);
 				}
 			}
 
