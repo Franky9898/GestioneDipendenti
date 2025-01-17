@@ -43,7 +43,6 @@ public class Manager extends Dipendenti
 					throw new SQLException("Creazione cliente fallita, ID non recuperato.");
 				}
 			}
-
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -51,9 +50,8 @@ public class Manager extends Dipendenti
 
 		try (PreparedStatement pstmt = conn.prepareStatement(query1, Statement.RETURN_GENERATED_KEYS))
 		{
-
 			double bonus = FunzUtili.getDouble(scanner, "Inserisci bonus: ");
-			pstmt.setInt(1, idDipendente);// il problema è qui!
+			pstmt.setInt(1, idDipendente);
 			pstmt.setDouble(2, bonus);
 
 			int righe = pstmt.executeUpdate();
@@ -78,13 +76,13 @@ public class Manager extends Dipendenti
 
 	public static void cancellaManager(Connection conn, Scanner scanner)
 	{
-		String query = "DELETE FROM azienda.dipendenti WHERE idDipendente = ? ; ";
+		String query = "DELETE FROM azienda.dipendenti WHERE idDipendente = ?;";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
 			int idDipendente = FunzUtili.getInt(scanner, "Inserire ID dipendente del manager da cancellare: ");
 			pstmt.setInt(1, idDipendente);
 			int righe = pstmt.executeUpdate();
-			if (righe == 0)
+			if (righe < 1)
 			{
 				throw new SQLException("Cancellazione manager fallita, nessuna riga rimossa.");
 			}
@@ -99,10 +97,10 @@ public class Manager extends Dipendenti
 	public static void visualizzaManager(Connection conn, Scanner scanner)
 	{
 
-		String query = "SELECT idDipendente, nome, cognome" 
-		+ "FROM azienda.dipendenti" 
-		+ "INNER JOIN azienda.manager" 
-		+ "ON  dipendenti.idDipendente = manager.idDipendente;";
+		String query = "SELECT dipendenti.idDipendente, nome, cognome, team.nomeTeam"
+				+ "FROM ((azienda.dipendenti"
+				+ "INNER JOIN azienda.manager ON manager.idDipendente = dipendenti.idDipendente)"
+				+ "INNER JOIN azienda.team ON dipendenti.idDipendente = team.idTeamLeader);";
 
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
@@ -115,7 +113,8 @@ public class Manager extends Dipendenti
 					int idDipendente = rs.getInt("idDipendente");
 					String nome = rs.getString("nome");
 					String cognome = rs.getString("cognome");
-					System.out.printf("idDipendente: %d | nome: %s | cognome: %s%n ", idDipendente, nome, cognome);
+					String nomeTeam = rs.getString("nomeTeam");
+					System.out.printf("idDipendente: %d | nome: %s | cognome: %s | nomeTeam: %s%n ", idDipendente, nome, cognome, nomeTeam);
 				}
 			}
 
@@ -127,7 +126,6 @@ public class Manager extends Dipendenti
 
 	public static void visualizzaManagerConID(Connection conn, Scanner scanner)
 	{
-
 		String query = "SELECT nome, cognome, manager.idDipendente" 
 				+ "FROM azienda.dipendenti" 
 				+ "INNER JOIN azienda.manager" 

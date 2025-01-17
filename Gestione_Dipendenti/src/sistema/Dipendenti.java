@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.Scanner;
-import java.sql.ResultSet;
 
 public class Dipendenti
 {
