@@ -227,7 +227,7 @@ public class Menu
 				Manager.visualizzaManager(conn, scanner);
 				break;
 			case "4":
-				Manager.visualizzaManager(conn, scanner, 0);
+				Manager.visualizzaManagerConID(conn, scanner);
 				break;
 			}
 		}
