@@ -126,8 +126,8 @@ public class Menu
 		while (!uscita)
 		{
 			System.out.println(
-					"\nMenu:\n" + "1. Inserisci sviluppatore.\n" + "2. Cancella sviluppatore.\n" + "3. Selezione sviluppatore e relativi linguaggi conosciuti.\n" + "4. Aggiungi linguaggio.\n" 
-							+ "5. Torna al menù principale.\n" + "Inserisci comando: ");
+					"\nMenu:\n" + "1. Inserisci sviluppatore.\n" + "2. Cancella sviluppatore.\n" + "3. Selezione sviluppatore e relativi linguaggi conosciuti.\n" + "4. Aggiungi linguaggio.\n" + "5. Cancella linguaggio.\n"
+							+ "6. Selezione linguaggio.\n"+ "7. Torna al menù principale.\n" + "Inserisci comando: ");
 			risposta = scanner.nextLine();
 			switch (risposta)
 			{
@@ -144,6 +144,12 @@ public class Menu
 				Sviluppatori.aggiungiLinguaggioSviluppatore(conn, scanner);
 				break;
 			case "5":
+				Linguaggi.cancellaLinguaggio(conn, scanner);
+				break;
+			case "6":
+				Linguaggi.selezioneLinguaggio(conn);
+				break;
+			case "7":
 				menuGenerale(conn, scanner);
 				uscita = true;
 				break;

@@ -30,6 +30,8 @@ public class Sviluppatori extends Dipendenti
 			pstmt.setString(2, cognome);
 			pstmt.setString(3, ruolo);
 			pstmt.setDouble(4, stipendio);
+			
+			Linguaggi.inserisciLinguaggio(conn,scanner);
 
 			int righe = pstmt.executeUpdate();
 			if (righe < 1)
@@ -50,7 +52,7 @@ public class Sviluppatori extends Dipendenti
 				}
 			}
 			pstmt2.setInt(1, idDipendente);
-			int righe2 = pstmt2.executeUpdate(query2);
+			int righe2 = pstmt2.executeUpdate();
 			if (righe2 < 1)
 			{
 				throw new SQLException("Aggiunta sviluppatore fallita, nessuna riga aggiunta.");
@@ -89,7 +91,7 @@ public class Sviluppatori extends Dipendenti
 	}
 
 	public static void cancellaSviluppatori(Connection conn, Scanner scanner)
-	{
+	{   //bisogna cancellare prima il record nella tabella sviluppagtori con foreign key iddipendente
 		String query = "DELETE FROM azienda.dipendenti WHERE idDipendente=?;";
 		String query2 = "DELETE FROM azienda.sviluppatori WHERE idDipendente=?;";
 		try (PreparedStatement pstmt = conn.prepareStatement(query); PreparedStatement pstmt2 = conn.prepareStatement(query2))
@@ -97,7 +99,7 @@ public class Sviluppatori extends Dipendenti
 			int idDipendenti = FunzUtili.getInt(scanner, "Inserisci ID dipendente da cancellare");
 			pstmt.setInt(1, idDipendenti);
 			pstmt2.setInt(1, idDipendenti);
-			int righe = pstmt.executeUpdate();
+			int righe = pstmt2.executeUpdate();
 			if (righe < 1)
 			{
 				throw new SQLException("Prima query boh");
