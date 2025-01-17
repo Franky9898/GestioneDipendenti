@@ -32,7 +32,6 @@ public class Manager extends Dipendenti
 			{
 				throw new SQLException("Creazione dipendente fallita, nessuna riga aggiunta.");
 			}
-			System.out.println("Dipendente aggiunto con successo");
 			try (ResultSet generatedKeys = pstmt.getGeneratedKeys())
 			{
 				if (generatedKeys.next())
@@ -106,8 +105,6 @@ public class Manager extends Dipendenti
 		{
 			try (ResultSet rs = pstmt.executeQuery())
 			{
-				if (!rs.next())
-					System.out.println("Non ci sono manager.");
 				while (rs.next())
 				{
 					int idDipendente = rs.getInt("idDipendente");
@@ -138,8 +135,6 @@ public class Manager extends Dipendenti
 			pstmt.setInt(1, id);
 			try (ResultSet rs = pstmt.executeQuery())
 			{
-				if (!rs.next())
-					System.out.println("Non ci sono manager con questo id.");
 				while (rs.next())
 				{
 					String nome = rs.getString("nome");

@@ -37,7 +37,7 @@ public class Dipendenti
 			pstmt.setString(3, ruolo);
 			pstmt.setDouble(4, stipendio);
 			int righe = pstmt.executeUpdate();
-			if (righe <1)
+			if (righe < 1)
 			{
 				throw new SQLException("Creazione cliente fallita, nessuna riga aggiunta.");
 			}
@@ -64,7 +64,7 @@ public class Dipendenti
 			int id = FunzUtili.getInt(scanner, "Selezionare ID dipendente da cancellare: ");
 			pstmt.setInt(1, id);
 			int righe = pstmt.executeUpdate();
-			if (righe <1)
+			if (righe < 1)
 			{
 				throw new SQLException("Cancellazione cliente fallita, nessuna riga rimossa.");
 			}
@@ -83,14 +83,12 @@ public class Dipendenti
 	 */
 	public static void selezioneDipendente(Connection conn)
 	{
-		String query = "SELECT idDipendente, nome, cognome, idTeam FROM azienda.dipendenti" + "INNER JOIN azienda.team_dipendentiassegnati ON dipendenti.idDipendente=team_dipendentiassegnati.idDipendente "
-				+ "WHERE ruolo='DIPENDENTE';";
+		String query = "SELECT dipendenti.idDipendente, nome, cognome, idTeam \r" + "FROM azienda.dipendenti"
+				+ " LEFT JOIN azienda.team_dipendentiassegnati ON dipendenti.idDipendente=team_dipendentiassegnati.idDipendente" + " WHERE ruolo=1;";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
 			try (ResultSet rs = pstmt.executeQuery())
 			{
-				if (!rs.next())
-					System.out.println("Nessun dipendente.");
 				while (rs.next())
 				{
 					int id = rs.getInt("idDipendente");
@@ -114,21 +112,20 @@ public class Dipendenti
 	 */
 	public static void selezioneImpiegati(Connection conn)
 	{
-		String query = "SELECT idDipendente, nome, cognome, idTeam FROM azienda.dipendenti"
-				+ "INNER JOIN azienda.team_dipendentiassegnati ON dipendenti.idDipendente=team_dipendentiassegnati.idDipendente;";
+		String query = "SELECT dipendenti.idDipendente, nome, cognome, ruolo, idTeam \r" + "FROM azienda.dipendenti"
+				+ " LEFT JOIN azienda.team_dipendentiassegnati ON dipendenti.idDipendente=team_dipendentiassegnati.idDipendente;" ;
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
 			try (ResultSet rs = pstmt.executeQuery())
 			{
-				if (!rs.next())
-					System.out.println("C'è il nulla.");
 				while (rs.next())
 				{
 					int id = rs.getInt("idDipendente");
 					String nome = rs.getString("nome");
 					String cognome = rs.getString("cognome");
+					String ruolo = rs.getString("ruolo");
 					int idTeam = rs.getInt("idTeam");
-					System.out.printf("ID: %d | Nome: %s | Cognome: %s | idTeam: %d%n", id, nome, cognome, idTeam);
+					System.out.printf("ID: %d | Nome: %s | Cognome: %s | Ruolo: %s | idTeam: %d%n", id, nome, cognome, ruolo, idTeam);
 				}
 			}
 
@@ -147,16 +144,16 @@ public class Dipendenti
 	 */
 	public static void cambioTeamDipendente(Connection conn, Scanner scanner)
 	{
-		String query = "UPDATE azienda.dipendenti SET idTeam = ? WHERE idDipendente = ?; ";
+		String query = "UPDATE azienda.team_dipendentiassegnati SET idTeam = ? WHERE idDipendente = ?; ";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
-			int id = FunzUtili.getInt(scanner, "Selezionare ID dipendente da aggiungere al team: ");
+			int id = FunzUtili.getInt(scanner, "Selezionare ID dipendente da trasferire: ");
 			System.out.println();
-			int idTeam = FunzUtili.getInt(scanner, "Inserire ID del team: ");
+			int idTeam = FunzUtili.getInt(scanner, "Inserire ID del nuovo team: ");
 			pstmt.setInt(1, idTeam);
 			pstmt.setInt(2, id);
 			int righe = pstmt.executeUpdate();
-			if (righe <1)
+			if (righe < 1)
 			{
 				throw new SQLException("Fallimento.");
 			}
@@ -184,7 +181,7 @@ public class Dipendenti
 			pstmt.setDouble(1, stipendio);
 			pstmt.setInt(2, id);
 			int righe = pstmt.executeUpdate();
-			if (righe <1)
+			if (righe < 1)
 			{
 				throw new SQLException("Il destino ha deciso che il dipendente non avrà una busta pagata.");
 			}
@@ -205,8 +202,8 @@ public class Dipendenti
 	public static void promozioneInManager(Connection conn, Scanner scanner)
 	{
 		String query = "UPDATE azienda.dipendenti SET ruolo = 'MANAGER' WHERE idDipendente = ?;";
-		String query2 = "INSERT INTO azienda.manager (idDipendente, bonus) VALUES (?,?, ?);";
-		try (PreparedStatement pstmt = conn.prepareStatement(query); PreparedStatement pstmt2 = conn.prepareStatement(query2))
+		String query2 = "INSERT INTO azienda.manager (idDipendente, bonus) VALUES (?,?);";
+		try (PreparedStatement pstmt = conn.prepareStatement(query); PreparedStatement pstmt2 = conn.prepareStatement(query2);)
 		{
 			int id = FunzUtili.getInt(scanner, "Selezionare ID del fortunato: ");
 			pstmt.setInt(1, id);
@@ -217,10 +214,8 @@ public class Dipendenti
 			}
 			System.out.println("Ruolo aggiornato con successo");
 			double bonus = FunzUtili.getDouble(scanner, "Inserire bonus: ");
-			int idTeam = FunzUtili.getInt(scanner, "Inserire idTeamGestito: ");
 			pstmt2.setInt(1, id);
 			pstmt2.setDouble(2, bonus);
-			pstmt2.setInt(3, idTeam);
 			int righe2 = pstmt2.executeUpdate();
 			if (righe2 < 1)
 			{

@@ -37,7 +37,7 @@ public class Menu
 				menuManager(conn,scanner);
 				break;
 			case "3":
-				// menuSviluppatore(conn,scanner);
+				//menuSviluppatore(conn,scanner);
 				break;
 			case "4":
 				menuProgetti(conn,scanner);
@@ -250,29 +250,33 @@ public class Menu
 		boolean uscita = false; // condizione di ripetizione del ciclo
 		while (!uscita)
 		{
-		System.out.println("\nMenù: "
+		System.out.println("\nMenù:\n"
 				+"1. Inserisci Team\n"
 				+"2. Leggi tutti i team\n" 
                 +"3. Aggiorna Team\n" 
-                +"4. Elimina Team\n" 
-                +"5. Torna al menù principale\n" 
+                +"4. Elimina Team\n"
+                +"5. Inserisci impiegato in un Team\n"
+                +"99. Torna al menù principale\n" 
                + "Inserisci comando: ");
 		 risposta = scanner.nextLine();
 	        switch (risposta)
 	        {
 	            case "1":
-	                Team.InserireTeam(conn, scanner);  // Chiama il metodo per inserire il team
+	                Team.inserireTeam(conn, scanner);  // Chiama il metodo per inserire il team
 	                break;
 	            case "2":
 	                Team.readAllTeam(conn, scanner);  // Chiama il metodo per leggere tutti i team
 	                break;
 	            case "3":
-	                Team.upDateTeam(conn, scanner);  // Chiama il metodo per aggiornare il team
+	                Team.updateTeam(conn, scanner);  // Chiama il metodo per aggiornare il team
 	                break;
 	            case "4":
 	                Team.CancellazioneTeam(conn, scanner);  // Chiama il metodo per cancellare il team
 	                break;
 	            case "5":
+	            	Team.inserireDipendenteInTeam(conn, scanner);
+	            	break;
+	            case "99":
 	                menuGenerale(conn, scanner);  // Torna al menù principale
 	                uscita = true;
 	                break;

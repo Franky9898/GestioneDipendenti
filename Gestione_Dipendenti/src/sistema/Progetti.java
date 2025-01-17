@@ -17,7 +17,7 @@ public class Progetti
 	 */
 	public static void inserimentoProgetto(Connection conn, Scanner scanner)
 	{
-		String query = "INSERT INTO azienda.progetti " + "(nomeProgetto, idProjectManager)" + "VALUES (?,?)";
+		String query = "INSERT INTO azienda.progetti " + "(nomeProgetto, idProjectManager)" + " VALUES (?,?)";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
 			System.out.println("Inserisci nome progetto: ");
