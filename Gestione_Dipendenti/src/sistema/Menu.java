@@ -213,7 +213,8 @@ public class Menu
 					+ "1. Inserisci manager.\n"
 					+ "2. Cancella manager.\n"
 					+ "3. Visualizza manager.\n"
-					+ "4. Cerca manager con id.");
+					+ "4. Cerca manager con id.\n"
+					+ "5. Calcola stipendio");
 			risposta = scanner.nextLine();
 			switch (risposta)
 			{
@@ -228,6 +229,16 @@ public class Menu
 				break;
 			case "4":
 				Manager.visualizzaManagerConID(conn, scanner);
+				break;
+			case "5" : 
+				Manager.calcolaStipendioManager(conn);
+				break;
+			case "6" :
+				menuGenerale(conn, scanner);
+				uscita = true;
+				break;
+			default:
+				System.out.println("Comando non valido. Riprova.");
 				break;
 			}
 		}
@@ -271,4 +282,5 @@ public class Menu
 	        }
 		}
 	}
+	
 }
