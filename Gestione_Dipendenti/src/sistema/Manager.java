@@ -83,7 +83,7 @@ public class Manager extends Dipendenti {
 		}
 	}
 
-	public static void visualizzaManager(Connection conn, Scanner scanner) {
+	public static void visualizzaManager(Connection conn) {
 
 		String query = "SELECT nome, cognome, manager.id, manager.idDipendente\n" + "FROM azienda.dipendenti\n"
 				+ "LEFT JOIN azienda.manager\n" + "ON  dipendenti.idDipendente = manager.idDipendente\n"
@@ -122,8 +122,8 @@ public class Manager extends Dipendenti {
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (!rs.next())
 					System.out.println("Non ci sono manager con questo id.");
+				
 				while (rs.next()) {
-					
 					String nome = rs.getString("nome");
 					String cognome = rs.getString("cognome");
 					id = rs.getInt("id");
@@ -137,5 +137,7 @@ public class Manager extends Dipendenti {
 			e.printStackTrace();
 		}
 	}
+	
+		
 
 }
