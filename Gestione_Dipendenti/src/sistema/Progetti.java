@@ -15,7 +15,7 @@ public class Progetti
 	 * 
 	 * @scanner: scanner per prendere testo da console
 	 */
-	public static void inserimentoProgetto(Connection conn, Scanner scanner)
+	public static void inserimentoProgetto(Connection conn, Scanner scanner) 
 	{
 		String query = "INSERT INTO azienda.progetti " + "(nomeProgetto, idProjectManager)" + "VALUES (?,?)";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
@@ -45,7 +45,7 @@ public class Progetti
 	 * 
 	 * @scanner: scanner per prendere testo da console
 	 */
-	public static void cancellaProgetto(Connection conn, Scanner scanner)
+	public static void cancellaProgetto(Connection conn, Scanner scanner) 
 	{
 		String query = "DELETE FROM azienda.progetti WHERE idProgetto = ?; ";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
@@ -72,21 +72,21 @@ public class Progetti
 	 */
 	public static void selezioneProgetto(Connection conn)
 	{
-		String query = "SELECT idProgetto, nomeProgetto, idProjectManager, idTeam FROM azienda.progetti" + "INNER JOIN azienda.teamassegnati_progetti "
-				+ "ON teamassegnati_progetti.idprogetto=progetti.idprogetti; ";
+		String query = "SELECT progetti.idProgetto, nomeProgetto, idProjectManager, teamassegnati_progetti.idTeam" + " FROM azienda.progetti" + " LEFT JOIN azienda.teamassegnati_progetti "
+				+ " ON teamassegnati_progetti.idProgetto=progetti.idProgetto; ";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
 			try (ResultSet rs = pstmt.executeQuery())
 			{
-				if (!rs.next())
-					System.out.println("Nessun dipendente.");
+				//if (!rs.next())
+					//System.out.println("Nessun progetto attivo.");
 				while (rs.next())
 				{
 					int idProgetto = rs.getInt("idProgetto");
-					String nome = rs.getString("nomeProgetto");
-					int idPM = rs.getInt("idProjectManager");
+					String nomeProgetto = rs.getString("nomeProgetto");
+					int idPM= rs.getInt("idProjectManager");
 					int idTeam = rs.getInt("idTeam");
-					System.out.printf("ID: %d | Nome: %s | Cognome: %d | idTeam: %d %n", idProgetto, nome, idPM, idTeam);
+					System.out.printf("ID progetto: %d | nome progetto: %s | ID P.manager: %d | idTeam: %d \n", idProgetto, nomeProgetto, idPM, idTeam);
 				}
 			}
 

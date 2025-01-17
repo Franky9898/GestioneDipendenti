@@ -17,24 +17,24 @@ public class Team
 	 */
     public static void InserireTeam(Connection conn, Scanner scanner)
     {
-    	String query ="INSERT INTO azienda.team " + " (nomeTeam,TeamLeader) " + " VALUES (?,?)";
+    	String query ="INSERT INTO azienda.team " + " (nomeTeam, idTeamLeader) " + " VALUES (?,?)";
     	try(PreparedStatement pstmt= conn.prepareStatement(query))
     	{
     		System.out.println("Inserisci nome del Team");
     		String nomeTeam = scanner.nextLine();
     		
-    		int teamLeader=FunzUtili.getInt(scanner, "Inserisci l'ID del TeamLeader");
+    		int idTeamLeader=FunzUtili.getInt(scanner, "Inserisci l'ID del TeamLeader");
     	
     		pstmt.setString(1,nomeTeam);
-    		pstmt.setInt(2, teamLeader);
+    		pstmt.setInt(2, idTeamLeader);
     		
     		int righe=pstmt.executeUpdate();
     		if(righe < 1) {
-    			System.out.println("Errore! vedi cosa hai fatto e ritorna");
+    			System.out.println("id non trovato");
     		}
     		else
     		{
-    		System.out.println("TeamLeader aggiunto con successo");	
+    		System.out.println("Team aggiunto con successo");	
     		}
     	} 
     	catch (SQLException e) {

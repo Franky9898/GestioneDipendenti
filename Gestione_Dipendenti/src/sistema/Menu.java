@@ -37,7 +37,7 @@ public class Menu
 				menuManager(conn,scanner);
 				break;
 			case "3":
-				// menuSviluppatore(conn,scanner);
+				menuSviluppatore(conn,scanner);
 				break;
 			case "4":
 				menuProgetti(conn,scanner);
@@ -256,7 +256,7 @@ public class Menu
 		boolean uscita = false; // condizione di ripetizione del ciclo
 		while (!uscita)
 		{
-		System.out.println("\nMenù: "
+		System.out.println("\nMenù:\n"
 				+"1. Inserisci Team\n"
 				+"2. Leggi tutti i team\n" 
                 +"3. Aggiorna Team\n" 
@@ -287,6 +287,47 @@ public class Menu
 	                break;
 	        }
 		}
+	}
+	
+	public static void menuSviluppatore(Connection conn, Scanner scanner) {
+		String risposta; 
+		boolean uscita = false; // condizione di ripetizione del ciclo
+		while (!uscita)
+		{
+		System.out.println("\nMenù:\n"
+				+"1. Inserisci sviluppatore\n"
+				+"2. Elimina sviluppatore\n" 
+                +"3. Visualizza sviluppatori\n" 
+                +"4. Aggiungi linguaggio\n" 
+                +"5. Torna al menu principale\n" 
+               + "Inserisci comando: ");
+		 risposta = scanner.nextLine();
+	        switch (risposta)
+	        {
+	            case "1":
+	                Sviluppatori.inserimentoSviluppatore(conn, scanner);  
+	                break;
+	            case "2":
+	                Sviluppatori.cancellaSviluppatori(conn, scanner); 
+	                break;
+	            case "3":
+	                Sviluppatori.selezioneSviluppatoriLinguaggi(conn);  
+	                break;
+	            case "4":
+	                Sviluppatori.aggiungiLinguaggioSviluppatore(conn, scanner);  
+	                break;
+	            case "5":
+	                menuGenerale(conn, scanner);  
+	                uscita = true;
+	                break;
+	            default:
+	                System.out.println("Comando non valido. Riprova.");
+	                break;
+	        }
+		}
+		
+		
+		
 	}
 	
 }
