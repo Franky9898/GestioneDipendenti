@@ -129,10 +129,10 @@ public class Manager extends Dipendenti
 	{
 
 		String query = "SELECT nome, cognome, manager.idDipendente" 
-				+ "FROM azienda.dipendenti" 
-				+ "INNER JOIN azienda.manager" 
-				+ "ON  dipendenti.idDipendente = manager.idDipendente"
-				+ "WHERE idDipendente = ?;";
+				+ " FROM azienda.dipendenti" 
+				+ " INNER JOIN azienda.manager" 
+				+ " ON  dipendenti.idDipendente = manager.idDipendente"
+				+ " WHERE dipendenti.idDipendente = ?;";
 
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
@@ -159,18 +159,22 @@ public class Manager extends Dipendenti
 
 	public static void modificaBonusManager(Connection conn, Scanner scanner) {
 		String query = "UPDATE azienda.manager"
-				+ "SET bonus = ? ;";
+				+ " SET bonus = ?"
+				+ " WHERE id = ?;";
 				
 		try (PreparedStatement pstmt = conn.prepareStatement(query)) {
 			
+			int id = FunzUtili.getInt(scanner, "Inserire ID manager: ");
 			Double bonus = FunzUtili.getDouble(scanner, "Inserire valore bonus: ");
 			pstmt.setDouble(1, bonus);
+			pstmt.setInt(2, id);
 			int righe = pstmt.executeUpdate();
 			if (righe <1)
 			{
 				throw new SQLException("Operazione non riuscita.");
+			} else {
+			System.out.println("Bonus aggiornato con successo.");
 			}
-			System.out.println("Dipendente inserito nel team con successo");
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -178,10 +182,10 @@ public class Manager extends Dipendenti
 	}
 	
 	public static void calcolaStipendioManager(Connection conn) {
-		String query = "SELECT nome, cognome, stipendio, manager.bonus "
-				+ "FROM azienda.dipendenti"
-				+ "INNER JOIN azienda.manager"
-				+ "ON dipendenti.idDipendente = manager.idDipendente;";
+		String query = "SELECT nome, cognome, stipendio, manager.bonus"
+				+ " FROM azienda.dipendenti"
+				+ " INNER JOIN azienda.manager"
+				+ " ON dipendenti.idDipendente = manager.idDipendente;";
 		
 		try(Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
 			
@@ -192,7 +196,7 @@ public class Manager extends Dipendenti
 				double bonus = rs.getDouble("bonus");
 				String nome = rs.getString("nome");
 				String cognome = rs.getString("cognome");
-				System.out.printf("nome %s | cognome %s | stipendio %.2f", nome, cognome, stipendio + bonus);
+				System.out.printf("nome %s | cognome %s | stipendio %.2f \n", nome, cognome, stipendio + bonus);
 			} 
 			
 			

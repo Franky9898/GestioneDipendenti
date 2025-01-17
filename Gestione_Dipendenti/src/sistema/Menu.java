@@ -210,11 +210,14 @@ public class Menu
 		boolean uscita = false;
 		while(!uscita) {
 			System.out.println("\nMenu:\n"
-					+ "1. Inserisci manager.\n"
-					+ "2. Cancella manager.\n"
-					+ "3. Visualizza manager.\n"
-					+ "4. Cerca manager con id.\n"
-					+ "5. Calcola stipendio");
+					+ "1. Inserisci manager\n"
+					+ "2. Cancella manager\n"
+					+ "3. Visualizza manager\n"
+					+ "4. Cerca manager con id\n"
+					+ "5. Modifica bonus\n"
+					+ "6. Calcola stipendio\n"
+					+ "7. Torna al menu principale\n"
+					+ "Inserisci comando: \n");
 			risposta = scanner.nextLine();
 			switch (risposta)
 			{
@@ -230,10 +233,13 @@ public class Menu
 			case "4":
 				Manager.visualizzaManagerConID(conn, scanner);
 				break;
-			case "5" : 
+			case "5" :
+				Manager.modificaBonusManager(conn, scanner);
+				break;
+			case "6" : 
 				Manager.calcolaStipendioManager(conn);
 				break;
-			case "6" :
+			case "7" :
 				menuGenerale(conn, scanner);
 				uscita = true;
 				break;
