@@ -13,8 +13,8 @@ public class Sviluppatori extends Dipendenti
 	// inserimento sviluppatore
 	public static void inserimentoSviluppatore(Connection conn, Scanner scanner)
 	{
-		String query = "INSERT INTO azienda.dipendenti " + "(nome, cognome, ruolo, stipendio)" + "VALUES (?,?,?,?)";
-		String query2 = "INSERT INTO azienda.sviluppatori " + "(idDipendente)" + "VALUES (?)";
+		String query = "INSERT INTO azienda.dipendenti " + "(nome, cognome, ruolo, stipendio)" + " VALUES (?,?,?,?)";
+		String query2 = "INSERT INTO azienda.sviluppatori " + "(idDipendente)" + " VALUES (?)";
 		// resultset id generato id=Statement.RETURN_GENERATED_KEYS
 		try (PreparedStatement pstmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS); // ritorno della key idDipendente foreign key di svilupp.
 				PreparedStatement pstmt2 = conn.prepareStatement(query2))
@@ -66,9 +66,9 @@ public class Sviluppatori extends Dipendenti
 	public static void selezioneSviluppatoriLinguaggi(Connection conn)
 	{
 		String query = "SELECT dipendenti.idDipendente, dipendenti.nome, dipendenti.cognome, linguaggi.nomeLinguaggio"
-				+ "FROM (((azienda.dipendenti INNER JOIN azienda.sviluppatori ON sviluppatori.idDipendente=dipendenti.idDipendente) "
-				+ "INNER JOIN azienda.sviluppatori_linguaggi ON sviluppatori_linguaggi.idDipendente = sviluppatori.idDipendente)"
-				+ "INNER JOIN azienda.linguaggi ON sviluppatori_linguaggi.idLinguaggio=linguaggi.idLinguaggio);";
+				+ " FROM (((azienda.dipendenti INNER JOIN azienda.sviluppatori ON sviluppatori.idDipendente=dipendenti.idDipendente) "
+				+ " INNER JOIN azienda.sviluppatori_linguaggi ON sviluppatori_linguaggi.idDipendente = sviluppatori.idDipendente)"
+				+ " INNER JOIN azienda.linguaggi ON sviluppatori_linguaggi.idLinguaggio=linguaggi.idLinguaggio);";
 		try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query))
 		{
 
