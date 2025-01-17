@@ -155,4 +155,47 @@ public class Manager extends Dipendenti
 		}
 	}
 
+	public static void modificaBonusManager(Connection conn, Scanner scanner) {
+		String query = "UPDATE azienda.manager"
+				+ "SET bonus = ? ;";
+				
+		try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+			
+			Double bonus = FunzUtili.getDouble(scanner, "Inserire valore bonus: ");
+			pstmt.setDouble(1, bonus);
+			int righe = pstmt.executeUpdate();
+			if (righe <1)
+			{
+				throw new SQLException("Operazione non riuscita.");
+			}
+			System.out.println("Dipendente inserito nel team con successo");
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void calcolaStipendioManager(Connection conn) {
+		String query = "SELECT nome, cognome, stipendio, manager.bonus "
+				+ "FROM azienda.dipendenti"
+				+ "INNER JOIN azienda.manager"
+				+ "ON dipendenti.idDipendente = manager.idDipendente;";
+		
+		try(Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
+			
+			System.out.println("Stipendi manager:");
+			
+			while(rs.next()) {
+				double stipendio = rs.getDouble("Stipendio");
+				double bonus = rs.getDouble("bonus");
+				String nome = rs.getString("nome");
+				String cognome = rs.getString("cognome");
+				System.out.printf("nome %s | cognome %s | stipendio %.2f", nome, cognome, stipendio + bonus);
+			} 
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }
