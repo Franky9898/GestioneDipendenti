@@ -62,10 +62,10 @@ public class Sviluppatori extends Dipendenti
 	// ti permette di viualizzare nome, cognome degli sviluppatori insieme ai linguaggi che conoscono
 	public static void selezioneSviluppatoriLinguaggi(Connection conn)
 	{
-		String query = "SELECT dipendenti.idDipendente, dipendenti.nome, dipendenti.cognome, linguaggi.nomeLinguaggio"
-				+ " FROM (((azienda.dipendenti INNER JOIN azienda.sviluppatori ON sviluppatori.idDipendente=dipendenti.idDipendente) "
-				+ " INNER JOIN azienda.sviluppatori_linguaggi ON sviluppatori_linguaggi.idDipendente = sviluppatori.idDipendente)"
-				+ " INNER JOIN azienda.linguaggi ON sviluppatori_linguaggi.idLinguaggio=linguaggi.idLinguaggio);";
+		String query = "SELECT dipendenti.idDipendente, nome, dcognome, linguaggi.nomeLinguaggio"
+				+ " FROM azienda.dipendenti INNER JOIN azienda.sviluppatori ON sviluppatori.idDipendente = dipendenti.idDipendente "
+				+ " LEFT  JOIN azienda.linguaggi ON dipendenti.idDipendente = linguaggi.idSviluppatore;";
+				
 		try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query))
 		{
 
