@@ -42,10 +42,10 @@ public class Linguaggi
 	 */
 	public static void cancellaLinguaggio(Connection conn, Scanner scanner)
 	{
-		String query = "DELETE FROM azienda.linguaggio WHERE idLinguaggio = ?; ";
+		String query = "DELETE FROM azienda.linguaggi WHERE idLinguaggio = ?; ";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
-			int id = FunzUtili.getInt(scanner, "Selezionare ID linguaggio da cancellare: ");
+			int id = FunzUtili.getInt(scanner, "Selezionare ID linguaggio da cancellare: \n");
 			pstmt.setInt(1, id);
 			int righe = pstmt.executeUpdate();
 			if (righe < 1)
@@ -72,8 +72,6 @@ public class Linguaggi
 		{
 			try (ResultSet rs = pstmt.executeQuery())
 			{
-				if (!rs.next())
-					System.out.println("Nessun linguaggio.");
 				while (rs.next())
 				{
 					int idLing = rs.getInt("idLinguaggio");

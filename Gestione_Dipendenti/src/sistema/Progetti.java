@@ -22,7 +22,7 @@ public class Progetti
 		{
 			System.out.println("Inserisci nome progetto: ");
 			String nome = scanner.nextLine();
-			int idPM = FunzUtili.getInt(scanner, "Inserisci ID del project manager: ");
+			int idPM = FunzUtili.getInt(scanner, "Inserisci ID del project manager: \n");
 			pstmt.setString(1, nome);
 			pstmt.setInt(2, idPM);
 			int righe = pstmt.executeUpdate();
@@ -50,7 +50,7 @@ public class Progetti
 		String query = "DELETE FROM azienda.progetti WHERE idProgetto = ?; ";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
-			int id = FunzUtili.getInt(scanner, "Selezionare ID progetto da cancellare: ");
+			int id = FunzUtili.getInt(scanner, "Selezionare ID progetto da cancellare: \n");
 			pstmt.setInt(1, id);
 			int righe = pstmt.executeUpdate();
 			if (righe <1)
@@ -108,7 +108,7 @@ public class Progetti
 		String query = "UPDATE azienda.progetti SET nomeProgetto = ? WHERE idProgetto = ?;";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
-			int id = FunzUtili.getInt(scanner, "Inserisci id del progetto a cui modificare il nome: ");
+			int id = FunzUtili.getInt(scanner, "Inserisci id del progetto a cui modificare il nome: \n");
 			System.out.println("Inserisci nuovo nome progetto: ");
 			String nome = scanner.nextLine();
 			pstmt.setString(1, nome);
@@ -117,6 +117,25 @@ public class Progetti
 			if (righe < 1)
 				throw new SQLException("Errore");
 			System.out.println("Nome progetto cambiato con successo");
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public static void inserireTeamInProgetto(Connection conn, Scanner scanner)
+	{
+		String query = "INSERT INTO azienda.teamassegnati_progetti (idTeam,idProgetto) VALUES (?,?);";
+		try (PreparedStatement pstmt = conn.prepareStatement(query))
+		{
+			int idProgetto = FunzUtili.getInt(scanner, "Inserisci id del progetto: \n");
+			int idTeam = FunzUtili.getInt(scanner, "Inserisci id del team da assegnare al progetto: \n");
+			pstmt.setInt(2, idProgetto);
+			pstmt.setInt(1, idTeam);
+			int righe = pstmt.executeUpdate();
+			if (righe < 1)
+				throw new SQLException("Errore nell'assegnazione del team");
+			System.out.println("Team assegnato con successo");
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -135,8 +154,8 @@ public class Progetti
 		String query = "UPDATE azienda.teamassegnati_progetti SET idTeam = ? WHERE idTeam = ?;";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
-			int idSostituito = FunzUtili.getInt(scanner, "Inserisci id del team da sostituire: ");
-			int idNuovo = FunzUtili.getInt(scanner, "Inserisci id del nuovo team che lavorerà al progetto: ");
+			int idSostituito = FunzUtili.getInt(scanner, "Inserisci id del team da sostituire: \n");
+			int idNuovo = FunzUtili.getInt(scanner, "Inserisci id del nuovo team che lavorerà al progetto: \n");
 			pstmt.setInt(1, idNuovo);
 			pstmt.setInt(2, idSostituito);
 			int righe = pstmt.executeUpdate();
@@ -161,8 +180,8 @@ public class Progetti
 		String query = "UPDATE azienda.progetti SET idProjectManager = ? WHERE idProgetto = ?;";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
-			int id = FunzUtili.getInt(scanner, "Inserisci id del progetto a cui modificare il project manager: ");
-			int idPM = FunzUtili.getInt(scanner, "Inserisci id del nuovo project manager: ");
+			int id = FunzUtili.getInt(scanner, "Inserisci id del progetto a cui modificare il project manager: \n");
+			int idPM = FunzUtili.getInt(scanner, "Inserisci id del nuovo project manager: \n");
 			pstmt.setInt(1, idPM);
 			pstmt.setInt(2, id);
 			int righe = pstmt.executeUpdate();

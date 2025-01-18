@@ -31,7 +31,7 @@ public class Dipendenti
 			System.out.println("Inserisci cognome dipendente: ");
 			String cognome = scanner.nextLine();
 			String ruolo = "DIPENDENTE";
-			double stipendio = FunzUtili.getDouble(scanner, "Inserisci stipendio dipendente: ");
+			double stipendio = FunzUtili.getDouble(scanner, "Inserisci stipendio dipendente: \n");
 			pstmt.setString(1, nome);
 			pstmt.setString(2, cognome);
 			pstmt.setString(3, ruolo);
@@ -61,7 +61,7 @@ public class Dipendenti
 		String query = "DELETE FROM azienda.dipendenti WHERE idDipendente = ?; ";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
-			int id = FunzUtili.getInt(scanner, "Selezionare ID dipendente da cancellare: ");
+			int id = FunzUtili.getInt(scanner, "Selezionare ID dipendente da cancellare: \n");
 			pstmt.setInt(1, id);
 			int righe = pstmt.executeUpdate();
 			if (righe < 1)
@@ -147,9 +147,9 @@ public class Dipendenti
 		String query = "UPDATE azienda.team_dipendentiassegnati SET idTeam = ? WHERE idDipendente = ?; ";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
-			int id = FunzUtili.getInt(scanner, "Selezionare ID dipendente da trasferire: ");
+			int id = FunzUtili.getInt(scanner, "Selezionare ID dipendente da trasferire: \n");
 			System.out.println();
-			int idTeam = FunzUtili.getInt(scanner, "Inserire ID del nuovo team: ");
+			int idTeam = FunzUtili.getInt(scanner, "Inserire ID del nuovo team: \n");
 			pstmt.setInt(1, idTeam);
 			pstmt.setInt(2, id);
 			int righe = pstmt.executeUpdate();
@@ -176,8 +176,8 @@ public class Dipendenti
 		String query = "UPDATE azienda.dipendenti SET stipendio = ? WHERE idDipendente = ?; ";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
-			int id = FunzUtili.getInt(scanner, "Selezionare ID dipendente a cui si vuole cambiare lo stipendio: ");
-			double stipendio = FunzUtili.getDouble(scanner, "Inserire nuovo stipendio: ");
+			int id = FunzUtili.getInt(scanner, "Selezionare ID dipendente a cui si vuole cambiare lo stipendio: \n");
+			double stipendio = FunzUtili.getDouble(scanner, "Inserire nuovo stipendio: \n");
 			pstmt.setDouble(1, stipendio);
 			pstmt.setInt(2, id);
 			int righe = pstmt.executeUpdate();
@@ -205,7 +205,7 @@ public class Dipendenti
 		String query2 = "INSERT INTO azienda.manager (idDipendente, bonus) VALUES (?,?);";
 		try (PreparedStatement pstmt = conn.prepareStatement(query); PreparedStatement pstmt2 = conn.prepareStatement(query2);)
 		{
-			int id = FunzUtili.getInt(scanner, "Selezionare ID del fortunato: ");
+			int id = FunzUtili.getInt(scanner, "Selezionare ID del fortunato: \n");
 			pstmt.setInt(1, id);
 			int righe = pstmt.executeUpdate();
 			if (righe < 1)
@@ -213,7 +213,7 @@ public class Dipendenti
 				throw new SQLException("Il destino ha deciso che il dipendente rimarrà tale.");
 			}
 			System.out.println("Ruolo aggiornato con successo");
-			double bonus = FunzUtili.getDouble(scanner, "Inserire bonus: ");
+			double bonus = FunzUtili.getDouble(scanner, "Inserire bonus: \n");
 			pstmt2.setInt(1, id);
 			pstmt2.setDouble(2, bonus);
 			int righe2 = pstmt2.executeUpdate();
