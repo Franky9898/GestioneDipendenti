@@ -23,15 +23,11 @@ public class Sviluppatori extends Dipendenti
 			System.out.println("Inserisci cognome dipendente: ");
 			String cognome = scanner.nextLine();
 			String ruolo = "SVILUPPATORE";
-			double stipendio = FunzUtili.getDouble(scanner, "Inserire stipendio: ");
-
+			double stipendio = FunzUtili.getDouble(scanner, "Inserire stipendio: \n");
 			pstmt.setString(1, nome);
 			pstmt.setString(2, cognome);
 			pstmt.setString(3, ruolo);
 			pstmt.setDouble(4, stipendio);
-			
-			Linguaggi.inserisciLinguaggio(conn,scanner);
-
 			int righe = pstmt.executeUpdate();
 			if (righe < 1)
 			{
@@ -81,7 +77,7 @@ public class Sviluppatori extends Dipendenti
 				String cognome = rs.getString("cognome");
 				String nomeLinguaggio = rs.getString("nomeLinguaggio");
 
-				System.out.printf("ID Dipendente: %d | Nome: %s | Cognome: %s | Linguaggio: %s", idDipendente, nome, cognome, nomeLinguaggio);
+				System.out.printf("ID Dipendente: %d | Nome: %s | Cognome: %s | Linguaggio: %s%n", idDipendente, nome, cognome, nomeLinguaggio);
 			}
 		} catch (SQLException e)
 		{
@@ -95,7 +91,7 @@ public class Sviluppatori extends Dipendenti
 		String query2 = "DELETE FROM azienda.sviluppatori WHERE idDipendente=?;";
 		try (PreparedStatement pstmt = conn.prepareStatement(query); PreparedStatement pstmt2 = conn.prepareStatement(query2))
 		{
-			int idDipendenti = FunzUtili.getInt(scanner, "Inserisci ID dipendente da cancellare");
+			int idDipendenti = FunzUtili.getInt(scanner, "Inserisci ID dipendente da cancellare: \n");
 			pstmt.setInt(1, idDipendenti);
 			pstmt2.setInt(1, idDipendenti);
 			int righe = pstmt2.executeUpdate();
@@ -106,7 +102,7 @@ public class Sviluppatori extends Dipendenti
 			int righe2 = pstmt.executeUpdate();
 			if (righe2 < 1)
 			{
-				throw new SQLException("Prima query boh");
+				throw new SQLException("Seconda query boh");
 			}
 			System.out.println("Sviluppatore cancellato AH");
 
@@ -121,8 +117,8 @@ public class Sviluppatori extends Dipendenti
 		String query = "INSERT INTO azienda.sviluppatori_linguaggi (idDipendente, idLinguaggio) VALUES (?,?);";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
-			int idDipendente = FunzUtili.getInt(scanner, "Inserisci ID dipendente dello sviluppatore che ha imparato un nuovo linguaggio *CLAP* *CLAP*");
-			int idLinguaggio = FunzUtili.getInt(scanner, "Inserisci ID linguaggio");
+			int idDipendente = FunzUtili.getInt(scanner, "Inserisci ID dipendente dello sviluppatore a cui assegnare il linguaggio: \n");
+			int idLinguaggio = FunzUtili.getInt(scanner, "Inserisci ID linguaggio: \n");
 			pstmt.setInt(1, idDipendente);
 			pstmt.setInt(2, idLinguaggio);
 			int righe = pstmt.executeUpdate();

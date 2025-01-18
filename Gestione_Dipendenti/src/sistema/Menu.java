@@ -23,7 +23,7 @@ public class Menu
 		{
 
 			System.out.println("\nMenù: \n" + "1. Menù gestione Dipendenti\n" + "2. Menù gestione Manager\n" + "3. Menù gestione Sviluppatore\n" 
-					+ "4. Menù gestione Progetti\n" + "5. Menù gestione Team\n" + "7. Menù gestione Linguaggi\n"
+					+ "4. Menù gestione Progetti\n" + "5. Menù gestione Team\n" + "6. Menù gestione Linguaggi\n"
 					+ "99. Esci\n" + "Inserisci comando:");
 
 			risposta = scanner.nextLine();
@@ -35,16 +35,21 @@ public class Menu
 				break;
 			case "2":
 				menuManager(conn,scanner);
+				uscita = true;
 				break;
 			case "3":
 				menuSviluppatore(conn,scanner);
+				uscita = true;
 				break;
 			case "4":
 				menuProgetti(conn,scanner);
+				uscita = true;
 				break;
 			case "5":
 				menuTeam(conn, scanner);
-			case "7":
+				uscita = true;
+				break;
+			case "6":
 				menuLinguaggi(conn, scanner);
 				uscita = true;
 				break;
@@ -126,8 +131,7 @@ public class Menu
 		while (!uscita)
 		{
 			System.out.println(
-					"\nMenu:\n" + "1. Inserisci sviluppatore.\n" + "2. Cancella sviluppatore.\n" + "3. Selezione sviluppatore e relativi linguaggi conosciuti.\n" + "4. Aggiungi linguaggio.\n" + "5. Cancella linguaggio.\n"
-							+ "6. Selezione linguaggio.\n"+ "7. Torna al menù principale.\n" + "Inserisci comando: ");
+					"\nMenu:\n" + "1. Inserisci sviluppatore.\n" + "2. Cancella sviluppatore.\n" + "3. Selezione sviluppatore e relativi linguaggi conosciuti.\n" + "4. Aggiungi un linguaggio a uno sviluppatore. \n" + "7. Torna al menù principale.\n" + "Inserisci comando: ");
 			risposta = scanner.nextLine();
 			switch (risposta)
 			{
@@ -142,12 +146,6 @@ public class Menu
 				break;
 			case "4":
 				Sviluppatori.aggiungiLinguaggioSviluppatore(conn, scanner);
-				break;
-			case "5":
-				Linguaggi.cancellaLinguaggio(conn, scanner);
-				break;
-			case "6":
-				Linguaggi.selezioneLinguaggio(conn);
 				break;
 			case "7":
 				menuGenerale(conn, scanner);
@@ -169,7 +167,7 @@ public class Menu
 		while (!uscita)
 		{
 			System.out.println("\nMenu:\n" + "1. Inserisci progetto.\n" + "2. Cancella progetto.\n" + "3. Seleziona i progetti.\n" + "4. Cambia nome a un progetto.\n"
-					+ "5. Sostituisci team assegnato a un progetto.\n" + "6. Cambia project manager di un progetto\n" + "7. Torna al menù principale.\n" + "Inserisci comando: ");
+					+"5. Assegna team a un progetto\n" + "6. Sostituisci team assegnato a un progetto.\n" + "7. Cambia project manager di un progetto\n" + "8. Torna al menù principale.\n" + "Inserisci comando: ");
 			risposta = scanner.nextLine();
 			switch (risposta)
 			{
@@ -185,15 +183,18 @@ public class Menu
 			case "4":
 				Progetti.cambioNomeProgetto(conn, scanner);
 				break;
-			case "5":
+			case "6":
 				Progetti.cambioIdTeamAssegnato(conn, scanner);
 				break;
-			case "6":
+			case "7":
 				Progetti.cambioProjectManager(conn, scanner);
 				break;
-			case "7":
+			case "8":
 				menuGenerale(conn, scanner);
 				uscita = true;
+				break;
+			case "5":
+				Progetti.inserireTeamInProgetto(conn, scanner);
 				break;
 			default:
 				System.out.println("Comando non valido. Riprova.");
@@ -217,9 +218,9 @@ public class Menu
 		while (!uscita)
 		{
 			System.out.println("\nMenu:\n"
-					+ "1. Inserisci progetto.\n"
-					+ "2. Cancella progetto.\n"
-					+ "3. Seleziona i progetti.\n"
+					+ "1. Inserisci linguaggio.\n"
+					+ "2. Cancella linguaggio.\n"
+					+ "3. Seleziona linguaggi.\n"
 					+ "4. Torna al menù principale.\n"
 					+ "Inserisci comando: ");
 			risposta = scanner.nextLine();
@@ -257,7 +258,7 @@ public class Menu
 					+ "5. Modifica bonus\n"
 					+ "6. Calcola stipendio\n"
 					+ "7. Torna al menu principale\n"
-					+ "Inserisci comando: \n");
+					+ "Inserisci comando: ");
 			risposta = scanner.nextLine();
 			switch (risposta)
 			{
