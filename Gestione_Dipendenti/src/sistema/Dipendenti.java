@@ -84,14 +84,14 @@ public class Dipendenti
 	 */
 	public static void selezioneDipendente(Connection conn)
 	{
-		String query = "SELECT idDipendente, nome, cognome, idTeam FROM azienda.dipendenti" + "INNER JOIN azienda.team_dipendentiassegnati ON dipendenti.idDipendente=team_dipendentiassegnati.idDipendente "
-				+ "WHERE ruolo='DIPENDENTE';";
+		String query = "SELECT dipendenti.idDipendente, nome, cognome, idTeam FROM azienda.dipendenti" + " LEFT JOIN azienda.team ON dipendenti.idDipendente = team.idTeamLeader "
+				+ " WHERE ruolo='DIPENDENTE';";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
 			try (ResultSet rs = pstmt.executeQuery())
 			{
-				if (!rs.next())
-					System.out.println("Nessun dipendente.");
+				//if (!rs.next())
+					//System.out.println("Nessun dipendente.");
 				while (rs.next())
 				{
 					int id = rs.getInt("idDipendente");
@@ -115,8 +115,8 @@ public class Dipendenti
 	 */
 	public static void selezioneImpiegati(Connection conn)
 	{
-		String query = "SELECT idDipendente, nome, cognome, idTeam FROM azienda.dipendenti"
-				+ "INNER JOIN azienda.team_dipendentiassegnati ON dipendenti.idDipendente=team_dipendentiassegnati.idDipendente;";
+		String query = "SELECT dipendenti.idDipendente, nome, cognome, idTeam FROM azienda.dipendenti"
+				+ " LEFT JOIN azienda.team_dipendentiassegnati ON dipendenti.idDipendente=team_dipendentiassegnati.idDipendente;";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
 			try (ResultSet rs = pstmt.executeQuery())
@@ -148,7 +148,7 @@ public class Dipendenti
 	 */
 	public static void cambioTeamDipendente(Connection conn, Scanner scanner)
 	{
-		String query = "UPDATE azienda.dipendenti SET idTeam = ? WHERE idDipendente = ?; ";
+		String query = "UPDATE azienda.team_dipendentiassegnati SET idTeam = ? WHERE idDipendente = ?; ";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
 			int id = FunzUtili.getInt(scanner, "Selezionare ID dipendente da aggiungere al team: ");
@@ -206,7 +206,7 @@ public class Dipendenti
 	public static void promozioneInManager(Connection conn, Scanner scanner)
 	{
 		String query = "UPDATE azienda.dipendenti SET ruolo = 'MANAGER' WHERE idDipendente = ?;";
-		String query2 = "INSERT INTO azienda.manager (idDipendente, bonus) VALUES (?,?, ?);";
+		String query2 = "INSERT INTO azienda.manager (idDipendente, bonus) VALUES (?,?);";
 		try (PreparedStatement pstmt = conn.prepareStatement(query); PreparedStatement pstmt2 = conn.prepareStatement(query2))
 		{
 			int id = FunzUtili.getInt(scanner, "Selezionare ID del fortunato: ");
@@ -216,12 +216,10 @@ public class Dipendenti
 			{
 				throw new SQLException("Il destino ha deciso che il dipendente rimarrà tale.");
 			}
-			System.out.println("Ruolo aggiornato con successo");
 			double bonus = FunzUtili.getDouble(scanner, "Inserire bonus: ");
-			int idTeam = FunzUtili.getInt(scanner, "Inserire idTeamGestito: ");
+			System.out.println("Ruolo aggiornato con successo");
 			pstmt2.setInt(1, id);
 			pstmt2.setDouble(2, bonus);
-			pstmt2.setInt(3, idTeam);
 			int righe2 = pstmt2.executeUpdate();
 			if (righe2 < 1)
 			{

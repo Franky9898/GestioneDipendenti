@@ -44,7 +44,7 @@ public class Manager extends Dipendenti {
 		try (PreparedStatement pstmt = conn.prepareStatement(query1, Statement.RETURN_GENERATED_KEYS)) {
 
 			double bonus = FunzUtili.getDouble(scanner, "Inserisci bonus: ");
-			pstmt.setInt(1, idDipendente);// il problema è qui!
+			pstmt.setInt(1, idDipendente);
 			pstmt.setDouble(2, bonus);
 
 			int righe = pstmt.executeUpdate();

@@ -11,17 +11,11 @@ public class Sviluppatori extends Dipendenti {
 	// sviluppatori
 	// inserimento sviluppatore
 	public static void inserimentoSviluppatore(Connection conn, Scanner scanner) {
-		String query = " INSERT INTO azienda.dipendenti " + "(nome, cognome, ruolo, stipendio)" + "VALUES (?,?,?,?)";
-		String query2 = " INSERT INTO azienda.sviluppatori " + "(idDipendente)" + "VALUES (?)";
+		String query = "INSERT INTO azienda.dipendenti" + "(nome, cognome, ruolo, stipendio)" + "VALUES (?,?,?,?)";
+		String query2 = "INSERT INTO azienda.sviluppatori" + "(idDipendente)" + "VALUES (?)";
 		// resultset id generato id=Statement.RETURN_GENERATED_KEYS
-		try (PreparedStatement pstmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS); // ritorno
-																												// della
-																												// key
-																												// idDipendente
-																												// foreign
-																												// key
-																												// di
-																												// svilupp.
+		try (PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS); // ritorno della key idDipendente (foreign key di sviluppatori)
+																												
 				PreparedStatement pstmt2 = conn.prepareStatement(query2)) {
 			System.out.println("Inserisci nome dipendente: ");
 			String nome = scanner.nextLine();

@@ -273,7 +273,7 @@ public class Menu
 	                Team.readAllTeam(conn, scanner);  // Chiama il metodo per leggere tutti i team
 	                break;
 	            case "3":
-	                Team.upDateTeam(conn, scanner);  // Chiama il metodo per aggiornare il team
+	                Team.updateTeam(conn, scanner);  // Chiama il metodo per aggiornare il team
 	                break;
 	            case "4":
 	                Team.CancellazioneTeam(conn, scanner);  // Chiama il metodo per cancellare il team

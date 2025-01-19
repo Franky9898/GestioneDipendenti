@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Scanner;
 
 public class Progetti
@@ -17,20 +18,53 @@ public class Progetti
 	 */
 	public static void inserimentoProgetto(Connection conn, Scanner scanner) 
 	{
-		String query = "INSERT INTO azienda.progetti " + "(nomeProgetto, idProjectManager)" + "VALUES (?,?)";
-		try (PreparedStatement pstmt = conn.prepareStatement(query))
+		int idProgetto = 0;
+		String query = "INSERT INTO azienda.progetti " + "(nomeProgetto)" + " VALUES (?)";
+		String query1 = "INSERT INTO azienda.teamassegnati_progetti (idTeam, idProgetto)" +" VALUES (?,?)";
+		try (PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS))
 		{
 			System.out.println("Inserisci nome progetto: ");
 			String nome = scanner.nextLine();
-			int idPM = FunzUtili.getInt(scanner, "Inserisci ID del project manager: ");
 			pstmt.setString(1, nome);
-			pstmt.setInt(2, idPM);
 			int righe = pstmt.executeUpdate();
 			if (righe <1)
 			{
 				throw new SQLException("Creazione progetto fallita, nessuna riga aggiunta.");
 			}
-			System.out.println("Progetto aggiunto con successo");
+			System.out.println("Progetto aggiunto al database");
+			
+			try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+				if (generatedKeys.next()) {
+					idProgetto = generatedKeys.getInt(1);
+				} else {
+					throw new SQLException("Creazione cliente fallita, ID non recuperato.");
+				}
+			}
+
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		
+		try (PreparedStatement pstmt = conn.prepareStatement(query1))
+		{
+			int idTeam = FunzUtili.getInt(scanner, "Inserire ID team da associare al progetto: ");
+			pstmt.setInt(1, idTeam);
+			pstmt.setInt(2, idProgetto);
+			int righe = pstmt.executeUpdate();
+			if (righe <1)
+			{
+				throw new SQLException("Operazione fallita.");
+			}
+			System.out.println("Progetto aggiunto con successo.");
+			
+			try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+				if (generatedKeys.next()) {
+					idProgetto = generatedKeys.getInt(1);
+				} else {
+					throw new SQLException("Creazione cliente fallita, ID non recuperato.");
+				}
+			}
 
 		} catch (SQLException e)
 		{
