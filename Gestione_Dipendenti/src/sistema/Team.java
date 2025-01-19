@@ -10,9 +10,11 @@ import java.util.Scanner;
 public class Team
 {
 	/*
-	 * CRUD metodo per inserire un team con Connection e scanner per connettersi al DB e leggere l'input dell'utente è un controllo perl'ID inserito da parte dell'utente
+	 * Metodo per inserire un team
 	 * 
+	 * @param conn: connessione con il database
 	 * 
+	 * @scanner: scanner per prendere testo da console
 	 */
 	public static void inserireTeam(Connection conn, Scanner scanner)
 	{
@@ -57,6 +59,13 @@ public class Team
 		}
 	}
 
+	/*
+	 * Metodo per visualizzare i team con relativo team leader
+	 * 
+	 * @param conn: connessione con il database
+	 * 
+	 * @scanner: scanner per prendere testo da console
+	 */
 	public static void readAllTeam(Connection conn, Scanner scanner)
 	{
 		String query = "SELECT * FROM azienda.team;";
@@ -75,6 +84,13 @@ public class Team
 		}
 	}
 
+	/*
+	 * Metodo per inserire un dipendente in un team
+	 * 
+	 * @param conn: connessione con il database
+	 * 
+	 * @scanner: scanner per prendere testo da console
+	 */
 	public static void inserireDipendenteInTeam(Connection conn, Scanner scanner)
 	{
 		String query = "INSERT INTO azienda.team_dipendentiassegnati (idTeam, idDipendente) VALUES (?, ?)";
@@ -96,6 +112,13 @@ public class Team
 		}
 	}
 
+	/*
+	 * Metodo per cambiare informazioni di un team
+	 * 
+	 * @param conn: connessione con il database
+	 * 
+	 * @scanner: scanner per prendere testo da console
+	 */
 	public static void updateTeam(Connection conn, Scanner scanner)
 	{
 		String query = "UPDATE azienda.team SET nomeTeam=? , idTeamLeader = ? WHERE idTeam=?";
@@ -126,12 +149,18 @@ public class Team
 		}
 	}
 
-	public static void CancellazioneTeam(Connection conn, Scanner scanner)
+	/*
+	 * Metodo per cancellare un team
+	 * 
+	 * @param conn: connessione con il database
+	 * 
+	 * @scanner: scanner per prendere testo da console
+	 */
+	public static void cancellazioneTeam(Connection conn, Scanner scanner)
 	{
 		String query = "DELETE FROM azienda.team WHERE idTeam= ?";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
 		{
-
 			int idTeam = FunzUtili.getInt(scanner, "Inserisci l'ID del team da eliminare: \n");
 			pstmt.setInt(1, idTeam);
 			int righe = pstmt.executeUpdate();
@@ -141,6 +170,37 @@ public class Team
 			}
 			System.out.println("Team Eliminato Con Successo");
 
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	/*
+	 * Metodo per visualizzare i membri di un team
+	 * 
+	 * @param conn: connessione con il database
+	 * 
+	 */
+	public static void visualizzaMembriTeam(Connection conn)
+	{
+		String query = "SELECT team.idTeam, nomeTeam, dipendenti.nome, dipendenti.cognome, dipendenti.ruolo FROM ((azienda.team INNER JOIN azienda.team_dipendentiassegnati ON team.idTeam = team_dipendentiassegnati.idTeam) INNER JOIN azienda.dipendenti ON dipendenti.idDipendente = team_dipendentiassegnati.idDipendente) ORDER BY team.idTeam;   ";
+		try (PreparedStatement pstmt = conn.prepareStatement(query))
+		{
+			try(ResultSet rs = pstmt.executeQuery()) 
+			{
+				while(rs.next()) 
+				{
+					int idTeam = rs.getInt("idTeam");
+					String nomeTeam = rs.getString("nomeTeam");
+					String nomeDip = rs.getString("nome");
+					String cognomeDip = rs.getString("cognome");
+					String ruolo = rs.getString("ruolo");
+					
+					System.out.printf("ID Dipendente: %d | Nome team: %s | Nome: %s | Cognome: %s | Ruolo: %s%n", idTeam, nomeTeam, nomeDip, cognomeDip, ruolo);
+				}
+			}
+			
 		} catch (SQLException e)
 		{
 			e.printStackTrace();

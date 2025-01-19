@@ -9,8 +9,13 @@ import java.util.Scanner;
 
 public class Sviluppatori extends Dipendenti
 {
-	// sviluppatori
-	// inserimento sviluppatore
+	/*
+	 * Metodo per inserire uno sviluppatore
+	 * 
+	 * @param conn: connessione con il database
+	 * 
+	 * @scanner: scanner per prendere testo da console
+	 */
 	public static void inserimentoSviluppatore(Connection conn, Scanner scanner)
 	{
 		String query = " INSERT INTO azienda.dipendenti " + "(nome, cognome, ruolo, stipendio)" + " VALUES (?,?,?,?)";
@@ -59,13 +64,19 @@ public class Sviluppatori extends Dipendenti
 		}
 	}
 
-	// ti permette di viualizzare nome, cognome degli sviluppatori insieme ai linguaggi che conoscono
+	/*
+	 * Metodo per visualizzare uno sviluppatore con le relative informazioni tra cui i linguaggi che conosce
+	 * 
+	 * @param conn: connessione con il database
+	 * 
+	 */
 	public static void selezioneSviluppatoriLinguaggi(Connection conn)
 	{
-		String query = "SELECT dipendenti.idDipendente, dipendenti.nome, dipendenti.cognome, linguaggi.nomeLinguaggio"
+		String query =  "SELECT dipendenti.idDipendente, dipendenti.nome, dipendenti.cognome, linguaggi.nomeLinguaggio"
 				+ " FROM (((azienda.dipendenti INNER JOIN azienda.sviluppatori ON sviluppatori.idDipendente=dipendenti.idDipendente) "
 				+ " INNER JOIN azienda.sviluppatori_linguaggi ON sviluppatori_linguaggi.idDipendente = sviluppatori.idDipendente)"
-				+ " INNER JOIN azienda.linguaggi ON sviluppatori_linguaggi.idLinguaggio=linguaggi.idLinguaggio);";
+				+ " INNER JOIN azienda.linguaggi ON sviluppatori_linguaggi.idLinguaggio=linguaggi.idLinguaggio) ORDER BY dipendenti.idDipendenti;";
+				
 		try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query))
 		{
 
@@ -85,6 +96,13 @@ public class Sviluppatori extends Dipendenti
 		}
 	}
 
+	/*
+	 * Metodo per eliminare uno sviluppatore
+	 * 
+	 * @param conn: connessione con il database
+	 * 
+	 * @scanner: scanner per prendere testo da console
+	 */
 	public static void cancellaSviluppatori(Connection conn, Scanner scanner)
 	{   //bisogna cancellare prima il record nella tabella sviluppagtori con foreign key iddipendente
 		String query = "DELETE FROM azienda.dipendenti WHERE idDipendente=?;";
@@ -112,6 +130,13 @@ public class Sviluppatori extends Dipendenti
 		}
 	}
 
+	/*
+	 * Metodo per inserire un linguaggio a uno sviluppatore
+	 * 
+	 * @param conn: connessione con il database
+	 * 
+	 * @scanner: scanner per prendere testo da console
+	 */
 	public static void aggiungiLinguaggioSviluppatore(Connection conn, Scanner scanner)
 	{
 		String query = "INSERT INTO azienda.sviluppatori_linguaggi (idDipendente, idLinguaggio) VALUES (?,?);";

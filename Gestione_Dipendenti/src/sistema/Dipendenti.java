@@ -193,7 +193,7 @@ public class Dipendenti
 	}
 
 	/*
-	 * Metodo per cambiare ruolo in MANAGER a un dipendente con un determinato id
+	 * Metodo per cambiare ruolo in MANAGER a un dipendente con un determinato id e inserirlo nella tabella manager
 	 * 
 	 * @param conn: connessione con il database
 	 * 

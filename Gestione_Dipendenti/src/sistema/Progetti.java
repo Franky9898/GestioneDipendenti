@@ -123,6 +123,13 @@ public class Progetti
 		}
 	}
 	
+	/*
+	 * Metodo per inserire un team in un progetto
+	 * 
+	 * @param conn: connessione con il database
+	 * 
+	 * @scanner: scanner per prendere testo da console
+	 */
 	public static void inserireTeamInProgetto(Connection conn, Scanner scanner)
 	{
 		String query = "INSERT INTO azienda.teamassegnati_progetti (idTeam,idProgetto) VALUES (?,?);";
@@ -136,6 +143,32 @@ public class Progetti
 			if (righe < 1)
 				throw new SQLException("Errore nell'assegnazione del team");
 			System.out.println("Team assegnato con successo");
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * Metodo per rimuovere un team in un progetto
+	 * 
+	 * @param conn: connessione con il database
+	 * 
+	 * @scanner: scanner per prendere testo da console
+	 */
+	public static void rimuovereTeamInProgetto(Connection conn, Scanner scanner)
+	{
+		String query = "DELETE FROM azienda.teamassegnati_progetti WHERE idProgetto=? AND idTeam=?;;";
+		try (PreparedStatement pstmt = conn.prepareStatement(query))
+		{
+			int idProgetto = FunzUtili.getInt(scanner, "Inserisci id del progetto: \n");
+			int idTeam = FunzUtili.getInt(scanner, "Inserisci id del team da rimuovere dal progetto: \n");
+			pstmt.setInt(1, idProgetto);
+			pstmt.setInt(2, idTeam);
+			int righe = pstmt.executeUpdate();
+			if (righe < 1)
+				throw new SQLException("Errore nell'eliminazione del team");
+			System.out.println("Team rimosso con successo");
 		} catch (SQLException e)
 		{
 			e.printStackTrace();

@@ -9,7 +9,13 @@ import java.util.Scanner;
 
 public class Manager extends Dipendenti
 {
-
+	/*
+	 * Metodo per inserire un manager (senza passare per dipenenti) nel database
+	 * 
+	 * @param conn: connessione con il database
+	 * 
+	 * @param scanner: scanner per prendere input utente
+	 */
 	public static void inserisciManager(Connection conn, Scanner scanner)
 	{
 		int idDipendente = -1;
@@ -75,6 +81,13 @@ public class Manager extends Dipendenti
 		}
 	}
 
+	/*
+	 * Metodo per eliminare completamente dal database un manager
+	 * 
+	 * @param conn: connessione con il database
+	 * 
+	 * @param scanner: scanner per prendere input utente
+	 */
 	public static void cancellaManager(Connection conn, Scanner scanner)
 	{
 		String queryMan = "DELETE FROM azienda.manager WHERE idDipendente = ? ; ";
@@ -109,7 +122,13 @@ public class Manager extends Dipendenti
 		}
 	}
 
-	public static void visualizzaManager(Connection conn, Scanner scanner)
+	/*
+	 * Metodo per visualizzare i manager con le loro informazioni
+	 * 
+	 * @param conn: connessione con il database
+	 * 
+	 */
+	public static void visualizzaManager(Connection conn)
 	{
 		String query = "SELECT manager.id, manager.idDipendente, nome, cognome" + " FROM azienda.dipendenti" + " INNER JOIN azienda.manager" + " ON  dipendenti.idDipendente = manager.idDipendente;";
 		try (PreparedStatement pstmt = conn.prepareStatement(query))
@@ -130,7 +149,14 @@ public class Manager extends Dipendenti
 			e.printStackTrace();
 		}
 	}
-
+	
+	/*
+	 * Metodo per cercare un manager con determinato id, si vedranno anche informazioni sul team gestito e progetto
+	 * 
+	 * @param conn: connessione con il database
+	 * 
+	 * @param scanner: scanner per prendere input utente
+	 */
 	public static void visualizzaManagerConID(Connection conn, Scanner scanner)
 	{
 
@@ -163,6 +189,13 @@ public class Manager extends Dipendenti
 		}
 	}
 
+	/*
+	 * Metodo per modificare il bonus di un manager
+	 * 
+	 * @param conn: connessione con il database
+	 * 
+	 * @param scanner: scanner per prendere input utente
+	 */
 	public static void modificaBonusManager(Connection conn, Scanner scanner)
 	{
 		String query = "UPDATE azienda.manager" + " SET bonus = ?" + " WHERE idDipendente = ?;";
@@ -189,6 +222,13 @@ public class Manager extends Dipendenti
 		}
 	}
 
+	/*
+	 * Metodo per calcolare stipendio totale di un manager
+	 * 
+	 * @param conn: connessione con il database
+	 * 
+	 * @param scanner: scanner per prendere input utente
+	 */
 	public static void calcolaStipendioManager(Connection conn)
 	{
 		String query = "SELECT nome, cognome, stipendio, manager.bonus" + " FROM azienda.dipendenti" + " INNER JOIN azienda.manager" + " ON dipendenti.idDipendente = manager.idDipendente;";

@@ -80,7 +80,7 @@ public class Menu
 		{
 			System.out.println(
 					"\nMenu:\n" + "1. Inserisci dipendente.\n" + "2. Cancella dipendente.\n" + "3. Seleziona i dipendenti.\n" + "4. Seleziona tutti gli impiegati.\n" + "5. Cambiare team a un dipendente.\n"
-							+ "6. Cambiare stipendio a un dipendente.\n" + "7. Promuovere in manager un dipendente.\n" + "8. Torna al menù principale.\n" + "Inserisci comando: ");
+							+ "6. Cambiare stipendio a un dipendente.\n" + "7. Promuovere in manager un dipendente.\n" + "99. Torna al menù principale.\n" + "Inserisci comando: ");
 			risposta = scanner.nextLine();
 			switch (risposta)
 			{
@@ -105,7 +105,7 @@ public class Menu
 			case "7":
 				Dipendenti.promozioneInManager(conn, scanner);
 				break;
-			case "8":
+			case "99":
 				menuGenerale(conn, scanner);
 				uscita = true;
 				break;
@@ -117,7 +117,7 @@ public class Menu
 	}
 
 	/*
-	 * Metodo che stampa in console un menù con diverse opzioni per gestire i vari progetti
+	 * Metodo che stampa in console un menù con diverse opzioni per gestire i vari sviluppatori
 	 * 
 	 * @param conn: connessione con il database
 	 * 
@@ -131,7 +131,7 @@ public class Menu
 		while (!uscita)
 		{
 			System.out.println(
-					"\nMenu:\n" + "1. Inserisci sviluppatore.\n" + "2. Cancella sviluppatore.\n" + "3. Selezione sviluppatore e relativi linguaggi conosciuti.\n" + "4. Aggiungi un linguaggio a uno sviluppatore. \n" + "7. Torna al menù principale.\n" + "Inserisci comando: ");
+					"\nMenu:\n" + "1. Inserisci sviluppatore.\n" + "2. Cancella sviluppatore.\n" + "3. Selezione sviluppatore e relativi linguaggi conosciuti.\n" + "4. Aggiungi un linguaggio a uno sviluppatore. \n" + "99. Torna al menù principale.\n" + "Inserisci comando: ");
 			risposta = scanner.nextLine();
 			switch (risposta)
 			{
@@ -147,7 +147,7 @@ public class Menu
 			case "4":
 				Sviluppatori.aggiungiLinguaggioSviluppatore(conn, scanner);
 				break;
-			case "7":
+			case "99":
 				menuGenerale(conn, scanner);
 				uscita = true;
 				break;
@@ -158,8 +158,13 @@ public class Menu
 		}
 	}
 	
-	
-
+	/*
+	 * Metodo che stampa in console un menù con diverse opzioni per gestire i vari progetti
+	 * 
+	 * @param conn: connessione con il database
+	 * 
+	 * @scanner: scanner per prendere testo da console
+	 */
 	public static void menuProgetti(Connection conn, Scanner scanner)
 	{
 		String risposta;
@@ -167,7 +172,7 @@ public class Menu
 		while (!uscita)
 		{
 			System.out.println("\nMenu:\n" + "1. Inserisci progetto.\n" + "2. Cancella progetto.\n" + "3. Seleziona i progetti.\n" + "4. Cambia nome a un progetto.\n"
-					+"5. Assegna team a un progetto\n" + "6. Sostituisci team assegnato a un progetto.\n" + "7. Cambia project manager di un progetto\n" + "8. Torna al menù principale.\n" + "Inserisci comando: ");
+					+"5. Assegna team a un progetto.\n" +"6. Rimuovi team da un progetto.\n"  +"7. Sostituisci team assegnato a un progetto.\n" + "8. Cambia project manager di un progetto\n" + "99. Torna al menù principale.\n" + "Inserisci comando: ");
 			risposta = scanner.nextLine();
 			switch (risposta)
 			{
@@ -183,18 +188,21 @@ public class Menu
 			case "4":
 				Progetti.cambioNomeProgetto(conn, scanner);
 				break;
-			case "6":
+			case "7":
 				Progetti.cambioIdTeamAssegnato(conn, scanner);
 				break;
-			case "7":
+			case "8":
 				Progetti.cambioProjectManager(conn, scanner);
 				break;
-			case "8":
+			case "99":
 				menuGenerale(conn, scanner);
 				uscita = true;
 				break;
 			case "5":
 				Progetti.inserireTeamInProgetto(conn, scanner);
+				break;
+			case "6":
+				Progetti.rimuovereTeamInProgetto(conn, scanner);
 				break;
 			default:
 				System.out.println("Comando non valido. Riprova.");
@@ -221,7 +229,7 @@ public class Menu
 					+ "1. Inserisci linguaggio.\n"
 					+ "2. Cancella linguaggio.\n"
 					+ "3. Seleziona linguaggi.\n"
-					+ "4. Torna al menù principale.\n"
+					+ "99. Torna al menù principale.\n"
 					+ "Inserisci comando: ");
 			risposta = scanner.nextLine();
 			switch (risposta)
@@ -235,7 +243,7 @@ public class Menu
 			case "3":
 				Linguaggi.selezioneLinguaggio(conn);
 				break;
-			case "4":
+			case "99":
 				menuGenerale(conn, scanner);
 				uscita = true;
 				break;
@@ -246,6 +254,13 @@ public class Menu
 		} 
 	}
 	
+	/*
+	 * Metodo che stampa in console un menù con diverse opzioni per gestire i manager
+	 * 
+	 * @param conn: connessione con il database
+	 * 
+	 * @scanner: scanner per prendere testo da console
+	 */
 	public static void menuManager(Connection conn, Scanner scanner) {
 		String risposta;
 		boolean uscita = false;
@@ -257,7 +272,7 @@ public class Menu
 					+ "4. Cerca manager con id\n"
 					+ "5. Modifica bonus\n"
 					+ "6. Calcola stipendio\n"
-					+ "7. Torna al menu principale\n"
+					+ "99. Torna al menu principale\n"
 					+ "Inserisci comando: ");
 			risposta = scanner.nextLine();
 			switch (risposta)
@@ -269,7 +284,7 @@ public class Menu
 				Manager.cancellaManager(conn, scanner);
 				break;
 			case "3":
-				Manager.visualizzaManager(conn, scanner);
+				Manager.visualizzaManager(conn);
 				break;
 			case "4":
 				Manager.visualizzaManagerConID(conn, scanner);
@@ -280,7 +295,7 @@ public class Menu
 			case "6" : 
 				Manager.calcolaStipendioManager(conn);
 				break;
-			case "7" :
+			case "99" :
 				menuGenerale(conn, scanner);
 				uscita = true;
 				break;
@@ -291,7 +306,13 @@ public class Menu
 		}
 	}
 
-
+	/*
+	 * Metodo che stampa in console un menù con diverse opzioni per gestire i vari team
+	 * 
+	 * @param conn: connessione con il database
+	 * 
+	 * @scanner: scanner per prendere testo da console
+	 */
 	public static void menuTeam(Connection conn, Scanner scanner) {
 		String risposta;
 		boolean uscita = false; // condizione di ripetizione del ciclo
@@ -303,6 +324,7 @@ public class Menu
                 +"3. Aggiorna Team\n" 
                 +"4. Elimina Team\n"
                 +"5. Inserisci impiegato in un Team\n"
+                +"6. Visualizza team con membri \n"
                 +"99. Torna al menù principale\n" 
                + "Inserisci comando: ");
 		 risposta = scanner.nextLine();
@@ -318,7 +340,7 @@ public class Menu
 	                Team.updateTeam(conn, scanner);  // Chiama il metodo per aggiornare il team
 	                break;
 	            case "4":
-	                Team.CancellazioneTeam(conn, scanner);  // Chiama il metodo per cancellare il team
+	                Team.cancellazioneTeam(conn, scanner);  // Chiama il metodo per cancellare il team
 	                break;
 	            case "5":
 	            	Team.inserireDipendenteInTeam(conn, scanner);
@@ -327,6 +349,9 @@ public class Menu
 	                menuGenerale(conn, scanner);  // Torna al menù principale
 	                uscita = true;
 	                break;
+	            case "6":
+	            	Team.visualizzaMembriTeam(conn);
+	            	break;
 	            default:
 	                System.out.println("Comando non valido. Riprova.");
 	                break;
